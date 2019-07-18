@@ -2057,6 +2057,31 @@ pre {
     border: 0
   }
 
+  /* Autocomplete form information */
+
+  .ng-autocomplete {
+    width: 90% !important;
+}
+
+.autocomplete-container{
+  z-index: 9;
+  box-shadow: 0 0px 0px 0 rgba(0,0,0,.2), 0 0px 0px 0 rgba(0,0,0,.14), 0 0px 0px 0px rgba(0,0,0,.12) !important;
+  position: relative;
+  overflow: visible;
+  height: 43px !important;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+}
+
+.item{
+  display: block;
+  width: 100%;
+  padding: .65rem 1rem;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  font-weight:400;
+}
+
 .form-control {
   display: block;
   width: 100%;
@@ -2121,7 +2146,7 @@ pre {
 }
 
 select.form-control:not([size]):not([multiple]) {
-  height: calc(2.55rem + 2px)
+  height: calc(3rem + 2px)
 }
 
 select.form-control:focus::-ms-value {
@@ -28555,6 +28580,15 @@ body.m-portlet--fullscreen {
       border-radius: 50%
     }
 
+    .authortitle{
+      font-size:.9rem !important;
+      font-weight:500 !important;
+    }
+    .authorpix img  {
+      width: 2.8rem !important;
+      border-radius: 50%
+    }
+
     .m-widget4 .m-widget4__item .m-widget4__img.m-widget4__img--pic img {
       width: 4rem;
       border-radius: 50%
@@ -35082,7 +35116,8 @@ td > .m-checkbox.m-checkbox--single, th > .m-checkbox.m-checkbox--single {
 
 .m-form .form-control-feedback {
   margin-top: .2rem;
-  font-size: .85rem
+  font-size: .85rem;
+  color: red;
 }
 
 .m-form .col-form-label, .m-form .form-control-label, .m-form .m-form__group > label {

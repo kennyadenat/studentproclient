@@ -179,11 +179,11 @@
                       Hello,&nbsp;
                     </span>
                     <span class="m-topbar__username">
-                      Nick
+                      {{UserItem.fullname}}
                     </span>
                     <span class="m-topbar__userpic">
-                      <img src="assets/app/media/img/users/user4.jpg"
-                        class="m--img-rounded m--marginless m--img-centered" alt="" />
+                      <img src="{{UserItem.avatar}}" class="m--img-rounded m--marginless m--img-centered"
+                        alt="{{UserItem.fullname}}" />
                     </span>
                   </a>
                   <div class="m-dropdown__wrapper">
@@ -193,15 +193,15 @@
                         style="background: url(assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
                         <div class="m-card-user m-card-user--skin-dark">
                           <div class="m-card-user__pic">
-                            <img src="assets/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless"
-                              alt="" />
+                            <img src="{{UserItem.avatar}}" class="m--img-rounded m--marginless"
+                              alt="{{UserItem.fullname}}" />
                           </div>
                           <div class="m-card-user__details">
                             <span class="m-card-user__name m--font-weight-500">
-                              Mark Andre
+                              {{UserItem.fullname}}
                             </span>
                             <a href="" class="m-card-user__email m--font-weight-300 m-link">
-                              mark.andre@gmail.com
+                              {{UserItem.email}}
                             </a>
                           </div>
                         </div>
@@ -250,7 +250,7 @@
                             </li>
                             <li class="m-nav__separator m-nav__separator--fit"></li>
                             <li class="m-nav__item">
-                              <a href="#"
+                              <a (click)="logout()"
                                 class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
                                 Logout
                               </a>

@@ -1,11 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import { JwtInterceptor } from '../helpers/jwt.interceptor';
+import { ErrorInterceptor } from '../helpers/error.interceptor';
+
+
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
@@ -24,6 +30,7 @@ import { CalendartypeComponent } from './calendartype/calendartype.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AddcalendarComponent } from './addcalendar/addcalendar.component';
 import { SubscribedComponent } from './subscribed/subscribed.component';
+import { ConfirmationComponent } from './confirmation/confirmation.component';
 
 @NgModule({
   declarations: [
@@ -45,16 +52,23 @@ import { SubscribedComponent } from './subscribed/subscribed.component';
     CalendartypeComponent,
     ProfileComponent,
     AddcalendarComponent,
-    SubscribedComponent
+    SubscribedComponent,
+    ConfirmationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     GraphQLModule,
     HttpClientModule,
-    FullCalendarModule
+    FullCalendarModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule,
+    AutocompleteLibModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

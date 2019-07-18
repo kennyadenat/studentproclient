@@ -14,15 +14,15 @@
             </h3>
           </div>
           <div>
-            <span class="m-subheader__daterange" id="m_dashboard_daterangepicker">
-              <span class="m-subheader__daterange-label">
-                <span class="m-subheader__daterange-title"></span>
-                <span class="m-subheader__daterange-date m--font-brand"></span>
+            <a [routerLink]="[ '/mycalendar/calendartype']"
+              class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
+              <span>
+                <i class="la la-plus"></i>
+                <span>
+                  Back
+                </span>
               </span>
-              <a href="#" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--pill">
-                <i class="la la-angle-down"></i>
-              </a>
-            </span>
+            </a>
           </div>
         </div>
       </div>
@@ -55,174 +55,267 @@
               </div>
             </div>
           </div>
+
           <div class="col-lg-9">
             <div class="m-portlet m-portlet--full-height m-portlet--tabs  ">
-              <div class="m-portlet__head">
-                <div class="m-portlet__head-tools">
-                  <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
-                    <li class="nav-item m-tabs__item">
-                      <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_user_profile_tab_1" role="tab">
-                        <i class="flaticon-share m--hide"></i>
-                        My Profile
-                      </a>
-                    </li>
-                  </ul>
+
+              <form [formGroup]="calendarForm" #f="ngForm">
+                <div class="m-portlet__head">
+                  <div class="m-portlet__head-tools">
+                    <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
+                      <li class="nav-item m-tabs__item">
+                        <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_user_profile_tab_1"
+                          role="tab">
+                          <i class="flaticon-share m--hide"></i>
+                          New Calendar
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-              <div class="tab-content">
-                <div class="tab-pane active" id="m_user_profile_tab_1">
-                  <form class="m-form m-form--fit m-form--label-align-right">
-                    <div class="m-portlet__body">
-                      <div class="form-group m-form__group m--margin-top-10 m--hide">
-                        <div class="alert m-alert m-alert--default" role="alert">
-                          The example form below demonstrates common HTML form elements that receive updated styles
-                          from Bootstrap with additional classes.
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <div class="col-9 ml-auto">
-                          <h3 class="m-form__section fontForm">
-                            Personal Details
-                          </h3>
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Full Name
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="Mark Andre">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Occupation
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="CTO">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Company Name
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="Keenthemes">
-                          <span class="m-form__help">
-                            If you want your invoices addressed to a company. Leave blank to use your full name.
-                          </span>
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Phone No.
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="+456669067890">
-                        </div>
-                      </div>
-                      <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-                      <div class="form-group m-form__group row">
-                        <div class="col-9 ml-auto">
-                          <h3 class="m-form__section">
-                            Address
-                          </h3>
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Address
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="L-12-20 Vertex, Cybersquare">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          City
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="San Francisco">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          State
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="California">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Postcode
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="45000">
-                        </div>
-                      </div>
-                      <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-                      <div class="form-group m-form__group row">
-                        <div class="col-9 ml-auto">
-                          <h3 class="m-form__section">
-                            Social Links
-                          </h3>
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Linkedin
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="www.linkedin.com/Mark.Andre">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Facebook
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="www.facebook.com/Mark.Andre">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Twitter
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="www.twitter.com/Mark.Andre">
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Instagram
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text" value="www.instagram.com/Mark.Andre">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="m-portlet__foot m-portlet__foot--fit">
-                      <div class="m-form__actions">
-                        <div class="row">
-                          <div class="col-2"></div>
+
+                <div class="tab-content">
+                  <div class="tab-pane active" id="m_user_profile_tab_1">
+                    <div class="m-form m-form--fit m-form--label-align-right">
+                      <div class="m-portlet__body">
+
+                        <!-- <div class="form-group m-form__group m--margin-top-10 m--hide">
+                          <div class="alert m-alert m-alert--default" role="alert">
+                            The example form below demonstrates common HTML form elements that receive updated styles
+                            from Bootstrap with additional classes.
+                          </div>
+                        </div> -->
+
+                        <!-- <div class="form-group m-form__group row">
+                          <div class="col-9 ml-auto">
+                            <h3 class="m-form__section fontForm">
+                              Personal Details
+                            </h3>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            Title
+                          </label>
                           <div class="col-8">
-                            <button type="reset" class="btn btn-accent m-btn m-btn--air m-btn--custom">
-                              Save changes
-                            </button>
-                            &nbsp;&nbsp;
-                            <button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom">
-                              Cancel
-                            </button>
+                            <input class="form-control m-input" type="text" formControlName="title">
+                            <div class="form-control-feedback"
+                              *ngIf="!calendarForm.get('title').valid && calendarForm.get('title').touched">
+                              you have not provided any calendar title.</div>
+                          </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            <!--Use Tags Input for this [optional]-->
+                            Note
+                          </label>
+                          <div class="col-8">
+                            <!-- <textarea class="form-control" id="m_autosize_1" rows="2" formControlName="note"></textarea> -->
+                            <textarea class="form-control m-input" rows="3" type="text"
+                              formControlName="note"></textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            <!--Use Tags Input for this [optional]-->
+                            Timezone
+                          </label>
+                          <div class="col-8">
+                            <div class="input-group m-input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" (click)="setformzone()">
+                                  <i class="flaticon-clock-1"></i>
+                                </span>
+                              </div>
+                              <select class="form-control m-input" formControlName="timezone">
+                                <option *ngFor="let item of timezoneList; index as i" [value]="item">{{item}}</option>
+                              </select>
+                            </div>
+
+                          </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            <!--Use Tags Input for this [optional]-->
+                            Institution
+                          </label>
+                          <div class="col-8">
+                            <input class="form-control m-input" type="text" formControlName="institution">
+                          </div>
+                        </div>
+
+                        <!-- <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            Start Date
+                          </label>
+                          <div class="col-8">
+                            <div class="input-group m-input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" (click)="d.toggle()">
+                                  <i class="flaticon-time-2"></i>
+                                </span>
+                              </div>
+                              <input type="text" class="form-control m-input" placeholder="yyyy-mm-dd" name="start"
+                                [displayMonths]="displayMonths" [navigation]="navigation" [outsideDays]="outsideDays"
+                                [showWeekNumbers]="showWeekNumbers" ngbDatepicker #d="ngbDatepicker"
+                                formControlName="startdate">
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <!-- <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            End Date
+                          </label>
+                          <div class="col-8">
+                            <div class="input-group m-input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" (click)="s.toggle()">
+                                  <i class="flaticon-time-2"></i>
+                                </span>
+                              </div>
+                              <input type="text" class="form-control m-input" placeholder="yyyy-mm-dd" name="end"
+                                [displayMonths]="displayMonths" [navigation]="navigation" [outsideDays]="outsideDays"
+                                [showWeekNumbers]="showWeekNumbers" ngbDatepicker #s="ngbDatepicker"
+                                formControlName="enddate">
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+
+                        <!-- <div class="form-group m-form__group row">
+                          <div class="col-9 ml-auto">
+                            <h3 class="m-form__section fontForm">
+                              Address
+                            </h3>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            Calendar Authors
+                          </label>
+                          <div class="col-8">
+                            <!-- <input class="form-control m-input" type="text"> -->
+                            <div class="input-group m-input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                  <i class="flaticon-user-add"></i>
+                                </span>
+                              </div>
+                              <div class="ng-autocomplete">
+                                <ng-autocomplete [data]="data" [searchKeyword]="keyword"
+                                  placeHolder="Add Calendar Author" historyIdentifier="data"
+                                  (selected)='selectEvent($event)' [itemTemplate]="itemTemplate"
+                                  (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)'
+                                  notFoundText='Name not found' [notFoundTemplate]="notFoundTemplate" #search
+                                  (keydown.enter)="addSearch(search.query)">
+                                </ng-autocomplete>
+
+                                <ng-template #itemTemplate let-item>
+                                  <div class="item">
+                                    <!-- <img src="{{item.flag}}" height="25"> -->
+                                    <span [innerHTML]="item.name"></span>
+                                  </div>
+                                </ng-template>
+
+                                <ng-template #notFoundTemplate let-notFound>
+                                  <div [innerHTML]="notFound"></div>
+                                </ng-template>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            <!--Use Tags Input for this [optional]-->
+
+                          </label>
+                          <div class="col-8">
+                            <!--begin::Widget 14-->
+                            <div class="m-widget4">
+                              <!--begin::Widget 14 Item-->
+                              <div class="m-widget4__item">
+                                <div class="m-widget4__img m-widget4__img--pic authorpix">
+                                  <img src="../../assets/app/media/img/users/100_2.jpg" alt="">
+                                </div>
+                                <div class="m-widget4__info">
+                                  <span class="m-widget4__title authortitle">
+                                    Kristika Bold
+                                  </span>
+                                  <br>
+                                  <span class="m-widget4__sub">
+                                    Product Designer,Apple Inc
+                                  </span>
+                                </div>
+                                <div class="m-widget4__ext">
+                                  <div class="btn-toolbar" role="toolbar" aria-label="...">
+                                    <div class="btn-group mr-2" role="group" aria-label="...">
+                                      <button type="button" class="m-btn btn btn-secondary">
+                                        <i class="la la-file-text-o"></i>
+                                      </button>
+                                      <button type="button" class="m-btn btn btn-secondary">
+                                        <i class="la la-bold"></i>
+                                      </button>
+                                      <button type="button" class="m-btn btn btn-secondary">
+                                        <i class="la la-close"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!--end::Widget 14 Item-->
+
+                            </div>
+                            <!--end::Widget 14-->
+                          </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                          <label for="example-text-input" class="col-3 col-form-label">
+                            Calendar Visibility
+                          </label>
+                          <div class="col-8">
+                            <span class="m-switch m-switch--lg m-switch--icon">
+                              <label>
+                                <input type="checkbox" checked="checked" name="" formControlName="status">
+                                <span></span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+
+
+                      </div>
+                      <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions">
+                          <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-8">
+                              <button type="button" (click)="addCalendar(f)"
+                                class="btn btn-accent m-btn m-btn--air m-btn--custom">
+                                Add Calendar
+                              </button>
+                              &nbsp;&nbsp;
+                              <button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom">
+                                Cancel
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
-                <div class="tab-pane " id="m_user_profile_tab_2"></div>
-                <div class="tab-pane " id="m_user_profile_tab_3"></div>
-              </div>
+              </form>
+
             </div>
           </div>
         </div>

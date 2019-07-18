@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from '../guard/auth.guard';
+
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -14,36 +16,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { AddcalendarComponent } from './addcalendar/addcalendar.component';
 import { SubscribedComponent } from './subscribed/subscribed.component';
 
-
 const routes: Routes = [ // otherwise redirect to home
-  // {
-  //   path: '',
-  //   component: DashboardComponent,
-  //   data: { title: 'Seed Samples' }
-  // },
-  // {
-  //   path: 'mycalendar',
-  //   component: MycalendarComponent,
-  //   data: { title: 'Seed Samples' }
-  // },
-  // {
-  //   path: 'login',
-  //   component: LoginComponent,
-  //   data: { title: 'Seed Samples' }
-  // },
-  // {
-  //   path: 'calendar',
-  //   component: CalendarComponent,
-  //   data: { title: 'Seed Samples' }
-  // },
-  // {
-  //   path: '',
-  //   component: LoginlayoutComponent,
-  //   children: [
-  //     { path: 'login', component: LoginComponent }
-
-  //   ]
-  // },
   {
     path: '',
     component: LoginlayoutComponent,
@@ -57,6 +30,7 @@ const routes: Routes = [ // otherwise redirect to home
   {
     path: '',
     component: AdminlayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',
