@@ -140,10 +140,41 @@
                   <form class="m-form m-form--fit m-form--label-align-right" [formGroup]="profileForm" #f="ngForm">
                     <div class="m-portlet__body">
                       <div class="form-group m-form__group row">
-                        <div class="col-9 ml-auto">
-                          <h3 class="m-form__section fontForm">
-                            Personal Details
-                          </h3>
+                        <label for="example-text-input" class="col-3 col-form-label">
+                          Role
+                        </label>
+                        <div class="col-8">
+                          <div class="input-group m-input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <i class="flaticon-user"></i>
+                              </span>
+                            </div>
+                            <select class="form-control m-input" formControlName="role">
+                              <option *ngFor="let item of timezoneList; index as i" [value]="item">{{item}}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group m-form__group row">
+                        <label for="example-text-input" class="col-3 col-form-label">
+                          Title
+                        </label>
+                        <div class="col-8">
+                          <div class="input-group m-input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <i class="flaticon-users"></i>
+                              </span>
+                            </div>
+                            <select class="form-control m-input" formControlName="title">
+                              <option value="" selected></option>
+                              <option value="Dr">Dr</option>
+                              <option value="Mr">Mr</option>
+                              <option value="Mrs">Mrs</option>
+                              <option value="Prof">Prof</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
                       <div class="form-group m-form__group row">
@@ -156,75 +187,180 @@
                       </div>
                       <div class="form-group m-form__group row">
                         <label for="example-text-input" class="col-3 col-form-label">
-                          Occupation
+                          Identity ID
                         </label>
                         <div class="col-8">
-                          <input class="form-control m-input" type="text">
+                          <input class="form-control m-input" type="text" formControlName="identityid">
+                          <span class="m-form__help">
+                            This could be your employee id, registration number, school id or something
+                            unique that makes it easier to reference you
+                          </span>
                         </div>
                       </div>
                       <div class="form-group m-form__group row">
                         <label for="example-text-input" class="col-3 col-form-label">
-                          Company Name
+                          Phone
                         </label>
                         <div class="col-8">
-                          <input class="form-control m-input" type="text">
+                          <input class="form-control m-input" type="text" formControlName="phone">
                         </div>
                       </div>
-                      <div class="form-group m-form__group row">
-                        <label for="example-text-input" class="col-3 col-form-label">
-                          Phone No.
-                        </label>
-                        <div class="col-8">
-                          <input class="form-control m-input" type="text">
-                        </div>
-                      </div>
+
                       <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
                       <div class="form-group m-form__group row">
-                        <div class="col-9 ml-auto">
-                          <h3 class="m-form__section fontForm">
-                            Address
-                          </h3>
-                        </div>
-                      </div>
-                      <div class="form-group m-form__group row">
                         <label for="example-text-input" class="col-3 col-form-label">
-                          Address
+                          Institution
                         </label>
                         <div class="col-8">
-                          <input class="form-control m-input" type="text">
+                          <!-- <input class="form-control m-input" type="text"> -->
+                          <div class="input-group m-input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <i class="flaticon-location"></i>
+                              </span>
+                            </div>
+                            <div class="ng-autocomplete">
+                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Institution"
+                                historyIdentifier="data" (selected)='selectEventInstitution($event)'
+                                [itemTemplate]="itemTemplateInst" (inputChanged)='onChangeSearchInstitution($event)'
+                                (inputFocused)='onFocusedInstitution($event)' notFoundText='Institution not found'
+                                [notFoundTemplate]="notFoundTemplateInst" #searchinsti
+                                (keydown.enter)="addSearchInstitution(searchinsti.query)" formControlName="institution">
+                              </ng-autocomplete>
+                              <ng-template #itemTemplateInst let-item>
+                                <div class="item">
+                                  <!-- <img src="{{item.flag}}" height="25"> -->
+                                  <span [innerHTML]="item.name"></span>
+                                </div>
+                              </ng-template>
+                              <ng-template #notFoundTemplateInst let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                              </ng-template>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
+
                       <div class="form-group m-form__group row">
                         <label for="example-text-input" class="col-3 col-form-label">
-                          City
+                          Faculty
                         </label>
                         <div class="col-8">
-                          <input class="form-control m-input" type="text">
+                          <!-- <input class="form-control m-input" type="text"> -->
+                          <div class="input-group m-input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <i class="flaticon-squares-4"></i>
+                              </span>
+                            </div>
+                            <div class="ng-autocomplete">
+                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Faculty"
+                                historyIdentifier="data" (selected)='selectEventFaculty($event)'
+                                [itemTemplate]="itemTemplateFac" (inputChanged)='onChangeSearchFaculty($event)'
+                                (inputFocused)='onFocusedFaculty($event)' notFoundText='Faculty not found'
+                                [notFoundTemplate]="notFoundTemplateFac" #searchfac
+                                (keydown.enter)="addSearchFaculty(searchfac.query)" formControlName="faculty">
+                              </ng-autocomplete>
+
+                              <ng-template #itemTemplateFac let-item>
+                                <div class="item">
+                                  <!-- <img src="{{item.flag}}" height="25"> -->
+                                  <span [innerHTML]="item.name"></span>
+                                </div>
+                              </ng-template>
+
+                              <ng-template #notFoundTemplateFac let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                              </ng-template>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
+
                       <div class="form-group m-form__group row">
                         <label for="example-text-input" class="col-3 col-form-label">
-                          State
+                          Department
                         </label>
                         <div class="col-8">
-                          <input class="form-control m-input" type="text">
+                          <!-- <input class="form-control m-input" type="text"> -->
+                          <div class="input-group m-input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <i class="flaticon-app"></i>
+                              </span>
+                            </div>
+                            <div class="ng-autocomplete">
+                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Department"
+                                historyIdentifier="data" (selected)='selectEventFaculty($event)'
+                                [itemTemplate]="itemTemplateDept" (inputChanged)='onChangeSearchDept($event)'
+                                (inputFocused)='onFocusedDept($event)' notFoundText='Department not found'
+                                [notFoundTemplate]="notFoundTemplateDept" #searchdept
+                                (keydown.enter)="addSearchDepartment(searchdept.query)" formControlName="department">
+                              </ng-autocomplete>
+
+                              <ng-template #itemTemplateDept let-item>
+                                <div class="item">
+                                  <!-- <img src="{{item.flag}}" height="25"> -->
+                                  <span [innerHTML]="item.name"></span>
+                                </div>
+                              </ng-template>
+
+                              <ng-template #notFoundTemplateDept let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                              </ng-template>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
+
                       <div class="form-group m-form__group row">
                         <label for="example-text-input" class="col-3 col-form-label">
-                          Postcode
+                          Level
                         </label>
                         <div class="col-8">
-                          <input class="form-control m-input" type="text">
+                          <!-- <input class="form-control m-input" type="text"> -->
+                          <div class="input-group m-input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <i class="flaticon-signs-1"></i>
+                              </span>
+                            </div>
+                            <div class="ng-autocomplete">
+                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Level"
+                                historyIdentifier="data" (selected)='selectEventLevel($event)'
+                                [itemTemplate]="itemTemplateLev" (inputChanged)='onChangeSearchLev($event)'
+                                (inputFocused)='onFocusedLev($event)' notFoundText='Level not found'
+                                [notFoundTemplate]="notFoundTemplateLev" #searchlev
+                                (keydown.enter)="addSearchLevel(searchlev.query)" formControlName="level">
+                              </ng-autocomplete>
+
+                              <ng-template #itemTemplateDept let-item>
+                                <div class="item">
+                                  <!-- <img src="{{item.flag}}" height="25"> -->
+                                  <span [innerHTML]="item.name"></span>
+                                </div>
+                              </ng-template>
+
+                              <ng-template #notFoundTemplateDept let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                              </ng-template>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
+
                     </div>
                     <div class="m-portlet__foot m-portlet__foot--fit">
                       <div class="m-form__actions">
                         <div class="row">
                           <div class="col-2"></div>
                           <div class="col-8">
-                            <button type="reset" class="btn btn-accent m-btn m-btn--air m-btn--custom">
+                            <button type="button" (click)="updateProfile(f)"
+                              class="btn btn-accent m-btn m-btn--air m-btn--custom">
                               Save changes
                             </button>
                             &nbsp;&nbsp;
@@ -237,8 +373,6 @@
                     </div>
                   </form>
                 </div>
-                <div class="tab-pane " id="m_user_profile_tab_2"></div>
-                <div class="tab-pane " id="m_user_profile_tab_3"></div>
               </div>
             </div>
           </div>

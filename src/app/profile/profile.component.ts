@@ -18,6 +18,10 @@ export class ProfileComponent implements OnInit {
     this.setProfileform();
   }
 
+  get f() {
+    return this.profileForm.controls;
+  }
+
   setProfileform() {
     this.profileForm = this.fb.group({
       userid: [null, Validators.required],
@@ -26,13 +30,16 @@ export class ProfileComponent implements OnInit {
       identityid: [null, Validators.required],
       avatar: [null, Validators.required],
       fullname: [null, Validators.required],
-      gender: [null, Validators.required],
       institution: [null, Validators.required],
       faculty: [null, Validators.required],
       department: [null, Validators.required],
       level: [null, Validators.required],
       phone: [null, Validators.required],
     });
+  }
+
+  updateProfile(formValue: NgForm) {
+    console.log(formValue.value);
   }
 
 }
