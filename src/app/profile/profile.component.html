@@ -40,12 +40,12 @@
                   </div>
                   <div class="m-card-profile__pic">
                     <div class="m-card-profile__pic-wrapper">
-                      <img src="/assets/images/kennys.png" alt="" />
+                      <img src="{{currentUser.avatar}}" alt="" />
                     </div>
                   </div>
                   <div class="m-card-profile__details">
                     <span class="m-card-profile__name">
-                      Mark Andre
+                      {{currentUser.fullname}}
                     </span>
                     <a href="" class="m-card-profile__email m-link">
                       mark.andre@gmail.com
@@ -100,22 +100,6 @@
                       </span>
                     </a>
                   </li>
-                  <li class="m-nav__item">
-                    <a href="header/profile&amp;demo=default.html" class="m-nav__link">
-                      <i class="m-nav__link-icon flaticon-time-3"></i>
-                      <span class="m-nav__link-text">
-                        Events
-                      </span>
-                    </a>
-                  </li>
-                  <li class="m-nav__item">
-                    <a href="header/profile&amp;demo=default.html" class="m-nav__link">
-                      <i class="m-nav__link-icon flaticon-lifebuoy"></i>
-                      <span class="m-nav__link-text">
-                        Support
-                      </span>
-                    </a>
-                  </li>
                 </ul>
                 <!-- <div class="m-portlet__body-separator"></div> -->
               </div>
@@ -151,7 +135,9 @@
                               </span>
                             </div>
                             <select class="form-control m-input" formControlName="role">
-                              <option *ngFor="let item of timezoneList; index as i" [value]="item">{{item}}</option>
+                              <option value="" selected></option>
+                              <option value="Lecturer or Tutor">Lecturer or Tutor</option>
+                              <option value="Student">Student</option>
                             </select>
                           </div>
                         </div>
@@ -220,17 +206,18 @@
                               </span>
                             </div>
                             <div class="ng-autocomplete">
-                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Institution"
-                                historyIdentifier="data" (selected)='selectEventInstitution($event)'
-                                [itemTemplate]="itemTemplateInst" (inputChanged)='onChangeSearchInstitution($event)'
-                                (inputFocused)='onFocusedInstitution($event)' notFoundText='Institution not found'
+                              <ng-autocomplete #inst [data]="institutionContexts" [searchKeyword]="institutionKeyword"
+                                placeHolder="Select Institution" (selected)='selectEventInstitution($event)'
+                                (inputCleared)="clearedInst($event)" [itemTemplate]="itemTemplateInst" minQueryLength=5
+                                (inputChanged)='onChangeSearchInstitution($event)'
+                                notFoundText='Institution not found. type it out and press enter to add to list'
                                 [notFoundTemplate]="notFoundTemplateInst" #searchinsti
                                 (keydown.enter)="addSearchInstitution(searchinsti.query)" formControlName="institution">
                               </ng-autocomplete>
-                              <ng-template #itemTemplateInst let-item>
+                              <ng-template class="templateitem" #itemTemplateInst let-item>
                                 <div class="item">
                                   <!-- <img src="{{item.flag}}" height="25"> -->
-                                  <span [innerHTML]="item.name"></span>
+                                  <span [innerHTML]="item.institution"></span>
                                 </div>
                               </ng-template>
                               <ng-template #notFoundTemplateInst let-notFound>
@@ -238,6 +225,10 @@
                               </ng-template>
                             </div>
                           </div>
+
+                          <span class="m-form__help">
+                            <!-- {{profileForm.get('institution').value}} -->
+                          </span>
 
                         </div>
                       </div>
@@ -248,25 +239,26 @@
                         </label>
                         <div class="col-8">
                           <!-- <input class="form-control m-input" type="text"> -->
-                          <div class="input-group m-input-group">
+                          <div class="input-group m-input-group formAuto">
                             <div class="input-group-prepend">
                               <span class="input-group-text">
                                 <i class="flaticon-squares-4"></i>
                               </span>
                             </div>
-                            <div class="ng-autocomplete">
-                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Faculty"
-                                historyIdentifier="data" (selected)='selectEventFaculty($event)'
+                            <div class="ng-autocomplete ">
+                              <ng-autocomplete #fac [data]="facultyContexts" [searchKeyword]="facultyKeyword"
+                                placeHolder="Select Faculty" (selected)='selectEventFaculty($event)' minQueryLength=5
                                 [itemTemplate]="itemTemplateFac" (inputChanged)='onChangeSearchFaculty($event)'
-                                (inputFocused)='onFocusedFaculty($event)' notFoundText='Faculty not found'
-                                [notFoundTemplate]="notFoundTemplateFac" #searchfac
+                                (inputCleared)="clearedFac($event)"
+                                notFoundText='Faculty not found. type it out and press enter to add to list'
+                                [notFoundTemplate]="notFoundTemplateFac" #searchfac minQueryLength=4
                                 (keydown.enter)="addSearchFaculty(searchfac.query)" formControlName="faculty">
                               </ng-autocomplete>
 
                               <ng-template #itemTemplateFac let-item>
                                 <div class="item">
                                   <!-- <img src="{{item.flag}}" height="25"> -->
-                                  <span [innerHTML]="item.name"></span>
+                                  <span [innerHTML]="item.faculty"></span>
                                 </div>
                               </ng-template>
 
@@ -275,6 +267,9 @@
                               </ng-template>
                             </div>
                           </div>
+                          <span class="m-form__help">
+                            <!-- {{profileForm.get('faculty').value}} -->
+                          </span>
 
                         </div>
                       </div>
@@ -285,17 +280,18 @@
                         </label>
                         <div class="col-8">
                           <!-- <input class="form-control m-input" type="text"> -->
-                          <div class="input-group m-input-group">
+                          <div class="input-group m-input-group" style="z-index: 6">
                             <div class="input-group-prepend">
                               <span class="input-group-text">
                                 <i class="flaticon-app"></i>
                               </span>
                             </div>
                             <div class="ng-autocomplete">
-                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Department"
-                                historyIdentifier="data" (selected)='selectEventFaculty($event)'
-                                [itemTemplate]="itemTemplateDept" (inputChanged)='onChangeSearchDept($event)'
-                                (inputFocused)='onFocusedDept($event)' notFoundText='Department not found'
+                              <ng-autocomplete #dept [data]="departmentContexts" [searchKeyword]="departmentKeyword"
+                                placeHolder="Select Department" (selected)='selectEventDepartment($event)'
+                                minQueryLength=4 [itemTemplate]="itemTemplateDept"
+                                (inputChanged)='onChangeSearchDepartment($event)' (inputCleared)="clearedDept($event)"
+                                notFoundText='Department not found. type it out and press enter to add to list'
                                 [notFoundTemplate]="notFoundTemplateDept" #searchdept
                                 (keydown.enter)="addSearchDepartment(searchdept.query)" formControlName="department">
                               </ng-autocomplete>
@@ -303,7 +299,7 @@
                               <ng-template #itemTemplateDept let-item>
                                 <div class="item">
                                   <!-- <img src="{{item.flag}}" height="25"> -->
-                                  <span [innerHTML]="item.name"></span>
+                                  <span [innerHTML]="item.department"></span>
                                 </div>
                               </ng-template>
 
@@ -312,44 +308,50 @@
                               </ng-template>
                             </div>
                           </div>
-
+                          <span class="m-form__help">
+                            <!-- {{profileForm.get('department').value}} -->
+                          </span>
                         </div>
                       </div>
 
-                      <div class="form-group m-form__group row">
+                      <div class="form-group m-form__group row" [hidden]="profileForm.get('role').value != 'Student'">
                         <label for="example-text-input" class="col-3 col-form-label">
                           Level
                         </label>
                         <div class="col-8">
                           <!-- <input class="form-control m-input" type="text"> -->
-                          <div class="input-group m-input-group">
+                          <div class="input-group m-input-group" style="z-index: 5">
                             <div class="input-group-prepend">
                               <span class="input-group-text">
                                 <i class="flaticon-signs-1"></i>
                               </span>
                             </div>
                             <div class="ng-autocomplete">
-                              <ng-autocomplete [data]="data" [searchKeyword]="keyword" placeHolder="Select Level"
-                                historyIdentifier="data" (selected)='selectEventLevel($event)'
-                                [itemTemplate]="itemTemplateLev" (inputChanged)='onChangeSearchLev($event)'
-                                (inputFocused)='onFocusedLev($event)' notFoundText='Level not found'
+                              <ng-autocomplete #lev [data]="levelContexts" [searchKeyword]="levelKeyword"
+                                placeHolder="Select Level" (selected)='selectEventLevel($event)' minQueryLength=3
+                                [itemTemplate]="itemTemplateLev" (inputChanged)='onChangeSearchLevel($event)'
+                                (inputCleared)="clearedLev($event)"
+                                notFoundText='Level not found. type it out and press enter to add to list'
                                 [notFoundTemplate]="notFoundTemplateLev" #searchlev
                                 (keydown.enter)="addSearchLevel(searchlev.query)" formControlName="level">
                               </ng-autocomplete>
 
-                              <ng-template #itemTemplateDept let-item>
+                              <ng-template #itemTemplateLev let-item>
                                 <div class="item">
                                   <!-- <img src="{{item.flag}}" height="25"> -->
-                                  <span [innerHTML]="item.name"></span>
+                                  <span [innerHTML]="item.level"></span>
                                 </div>
                               </ng-template>
 
-                              <ng-template #notFoundTemplateDept let-notFound>
+                              <ng-template #notFoundTemplateLev let-notFound>
                                 <div [innerHTML]="notFound"></div>
                               </ng-template>
                             </div>
                           </div>
 
+                          <span class="m-form__help">
+                            <!-- {{profileForm.get('level').value}} -->
+                          </span>
                         </div>
                       </div>
 

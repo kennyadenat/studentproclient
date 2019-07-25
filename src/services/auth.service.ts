@@ -12,6 +12,8 @@ export class AuthService {
 
   private currentUserContext: BehaviorSubject<User>;
   public currentUser: Observable<User>;
+  resp: any;
+
 
   respUser: any;
   constructor(
@@ -28,9 +30,17 @@ export class AuthService {
   }
 
   // Service for google authentication
-  signWithGoogle() {
+  signWithGoogle(params) {
     const env = { environment };
-    return this.http.get(`${env.environment.auth.dev}/google/`);
+    return this.http.post(`${env.environment.auth.dev}/authgoogle`, params)
+      .pipe(map(user => {
+        this.respUser = user;
+        if (this.respUser && this.respUser.token) {
+          localStorage.setItem('User', JSON.stringify(this.respUser));
+          this.currentUserContext.next(this.respUser);
+        }
+        return user;
+      }));
   }
 
   // service for user sign-in

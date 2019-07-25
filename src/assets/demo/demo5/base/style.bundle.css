@@ -2061,10 +2061,19 @@ pre {
 
   .ng-autocomplete {
     width: 90% !important;
+    z-index: auto;
+}
+
+.input-container {
+  z-index: 0;
+}
+
+.formAuto{
+  z-index:7;
 }
 
 .autocomplete-container{
-  z-index: 9;
+  z-index: 15;
   box-shadow: 0 0px 0px 0 rgba(0,0,0,.2), 0 0px 0px 0 rgba(0,0,0,.14), 0 0px 0px 0px rgba(0,0,0,.12) !important;
   position: relative;
   overflow: visible;
@@ -2076,8 +2085,8 @@ pre {
 .item{
   display: block;
   width: 100%;
-  padding: .65rem 1rem;
-  font-size: 1.2rem;
+  padding: .5rem 1rem;
+  font-size: 1.1rem;
   line-height: 1.7;
   font-weight:400;
 }
@@ -28584,8 +28593,14 @@ body.m-portlet--fullscreen {
       font-size:.9rem !important;
       font-weight:500 !important;
     }
+
     .authorpix img  {
       width: 2.8rem !important;
+      border-radius: 50%
+    }
+
+    .autopix {
+      max-width: 35px !important;
       border-radius: 50%
     }
 
@@ -48156,15 +48171,15 @@ select.m-select2 {
           display: table-cell;
           vertical-align: middle;
           text-transform: inherit;
-          font-size: 1rem;
+          font-size: 1.1rem;
           font-weight: 500;
           text-align: left;
-          color: #f33e5c;
+          color: #000;
           padding-right: 10px
         }
 
         .m-topbar .m-topbar__nav.m-nav > .m-nav__item.m-topbar__user-profile > .m-nav__link:hover .m-topbar__username {
-          color: #f33e5c
+          color: #010771
         }
 
         .m-topbar .m-topbar__nav.m-nav > .m-nav__item.m-topbar__user-profile > .m-nav__link .m-topbar__userpic {
@@ -53140,10 +53155,10 @@ select.m-select2 {
   .m-subheader .m-subheader__title {
     display: inline-block;
     padding: 7px 25px 7px 0;
-    font-family: Roboto;
+    font-family: poppins;
     font-weight: 300;
-    font-size: 1.55rem;
-    font-weight: 500;
+    font-size: 1.6rem;
+    font-weight: 400;
     vertical-align: middle;
     margin: 0 15px 0 0;
     color: #3f4047

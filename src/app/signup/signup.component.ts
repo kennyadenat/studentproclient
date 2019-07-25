@@ -46,7 +46,7 @@ export class SignupComponent implements OnInit {
   }
 
   signupGoogle() {
-    this.router.navigate([]).then(result => { window.open('http://localhost:4000/auth/google'); });
+    this.router.navigate([]).then(result => { window.open('http://localhost:3000/auth/google'); });
   }
 
   signUp(formValue) {

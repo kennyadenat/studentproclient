@@ -15,6 +15,8 @@ import { CalendartypeComponent } from './calendartype/calendartype.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AddcalendarComponent } from './addcalendar/addcalendar.component';
 import { SubscribedComponent } from './subscribed/subscribed.component';
+import { AuthredirectComponent } from './authredirect/authredirect.component';
+
 
 const routes: Routes = [ // otherwise redirect to home
   {
@@ -24,7 +26,8 @@ const routes: Routes = [ // otherwise redirect to home
       { path: '', component: LoginComponent, pathMatch: 'full' },
       { path: 'signin', component: LoginComponent },
       { path: 'signup', component: SignupComponent },
-      { path: 'reset', component: ResetpasswordComponent }
+      { path: 'reset', component: ResetpasswordComponent },
+      { path: 'authredirect/:id', component: AuthredirectComponent }
     ]
   },
   {
@@ -53,7 +56,7 @@ const routes: Routes = [ // otherwise redirect to home
         data: { title: 'Seed Samples' }
       },
       {
-        path: 'mycalendar/addcalendar',
+        path: 'mycalendar/addcalendar/:id',
         component: AddcalendarComponent,
         data: { title: 'Seed Samples' }
       },

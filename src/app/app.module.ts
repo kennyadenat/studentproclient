@@ -31,6 +31,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { AddcalendarComponent } from './addcalendar/addcalendar.component';
 import { SubscribedComponent } from './subscribed/subscribed.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { AuthredirectComponent } from './authredirect/authredirect.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     ProfileComponent,
     AddcalendarComponent,
     SubscribedComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    AuthredirectComponent
   ],
   imports: [
     BrowserModule,

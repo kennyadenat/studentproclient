@@ -28,13 +28,13 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const currentUser = this.authService.currentUserValue;
-    if (currentUser) {
+    if (currentUser && currentUser.token) {
       // check if the token has not expired
-      // if (next.data.roles && next.data.roles.indexOf(currentUser) === -1) {
-      //   // role not authorised so redirect to home page
-      //   this.router.navigate(['/']);
-      //   return false;
-      // }
+      if (next.data.roles && next.data.roles.indexOf(currentUser) === -1) {
+        // role not authorised so redirect to home page
+        this.router.navigate(['/']);
+        return false;
+      }
       return true;
     }
     // Store the attempted URL for redirecting

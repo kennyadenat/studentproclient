@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-resetpassword',
@@ -7,7 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResetpasswordComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private actRoute: ActivatedRoute,
+    private authService: AuthService
+  ) {
+    this.actRoute.params.subscribe(res => {
+
+    });
+  }
 
   ngOnInit() {
   }

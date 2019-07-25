@@ -1,10 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  NgForm,
+  FormArray
+} from '@angular/forms';
 // import { ValidCalendarDate } from '../../Validators/email.validators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateStruct, NgbDateNativeAdapter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import * as timezone from 'moment-timezone';
 import * as googletimezone from 'google-timezones-json';
+import { ProfileService } from '../../services/profile.service';
+import { AuthService } from '../../services/auth.service';
+import { Profile } from '../../models/profile.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ValidateEmailType } from '../../Validators/email.validators';
+import * as _ from 'underscore';
+
 
 @Component({
   selector: 'app-addcalendar',
@@ -13,40 +27,48 @@ import * as googletimezone from 'google-timezones-json';
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }]
 })
 export class AddcalendarComponent implements OnInit {
+  @ViewChild('use') use;
 
+  navID: string;
+  emailfound: boolean;
+  currentUser: any;
+  resp: any;
   displayMonths = 3;
   navigation = 'select';
   showWeekNumbers = false;
   outsideDays = 'visible';
   calendarForm: FormGroup;
+  authorForm: FormGroup;
   timezoneList: any;
-  data: any;
+  profile: Profile[] = [];
   keyword: string;
+  OwnerProfile: Profile;
 
   constructor(
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private router: Router,
+    private actRoute: ActivatedRoute,
+    private authService: AuthService,
+    private profileService: ProfileService) {
     this.setCalendarForm();
-    this.keyword = 'name';
-    this.data = [
-      {
-        id: 1,
-        name: 'Usa'
-      },
-      {
-        id: 2,
-        name: 'England'
-      },
-      {
-        id: 2,
-        name: 'Mexico'
-      }
-    ];
+    this.setCalendarAuthor();
+    this.keyword = 'fullname';
+    this.currentUser = this.authService.currentUserValue;
+    this.navID = this.actRoute.snapshot.params.id;
+    console.log(this.navID);
   }
 
   ngOnInit() {
-    //  this.getTimezoneMoment();
     this.getGoogleTimezone();
-    // console.log(this.getTimezone());
+    this.getProfile(this.currentUser._id);
+  }
+
+  getProfile(params) {
+    this.profileService.getOneProfile(params)
+      .subscribe(res => {
+        this.resp = res.data;
+        this.OwnerProfile = this.resp.profile;
+      });
   }
 
   getTimezone() {
@@ -56,103 +78,201 @@ export class AddcalendarComponent implements OnInit {
   }
 
   setCalendarForm() {
+    // check if the individual has their institution filled.
     this.calendarForm = this.fb.group({
       title: [null, Validators.required],
-      institution: [null, Validators.required],
+      institution: [null],
       type: [null, Validators.required],
-      color: [null, Validators.required],
+      color: [null],
       note: [null],
       status: [false, Validators.required],
       timezone: ['', Validators.required],
       // startdate: [Date.now, Validators.required],
       // enddate: [Date.now, Validators.required]
+      calendarauthor: this.fb.array([]),
+      calendarevent: this.fb.array([])
     });
     this.calendarForm.controls['timezone'].setValue(this.getTimezone(), { onlySelf: true });
+    this.calendarForm.patchValue({ type: this.actRoute.snapshot.params.id });
+  }
+
+  setCalendarAuthor() {
+    this.authorForm = this.fb.group({
+      calendarid: '',
+      userid: '',
+      avatar: '',
+      email: '',
+      fullname: '',
+      role: '',
+      isexist: false,
+    });
   }
 
   get f() {
     return this.calendarForm.controls;
   }
 
+  get getCalendarAuthors() {
+    return this.calendarForm.get('calendarauthor') as FormArray;
+  }
+
+  addCalendarAuthor() { }
+
+  removeCalendarAuthor() { }
+
   ValidCalendarDate(control) {
     return control;
   }
 
-  getTimezoneMoment() {
-    const timeZones = timezone.tz.names();
-    const offsetTimezone = [];
-
-    const abbrs = {
-      EST: 'Eastern Standard Time',
-      EAT: 'Eastern African Time',
-      EDT: 'Eastern Daylight Time',
-      CST: 'Central Standard Time',
-      CDT: 'Central Daylight Time',
-      MST: 'Mountain Standard Time',
-      MDT: 'Mountain Daylight Time',
-      PST: 'Pacific Standard Time',
-      PDT: 'Pacific Daylight Time',
-      CAT: 'Central African Time',
-      GMT: 'Greenwich Mean Time',
-    };
-
-    timezone.fn.zoneName = function () {
-      const abbr = this.zoneAbbr();
-      return abbrs[abbr] || abbr;
-    };
-
-    timeZones.forEach(element => {
-      // console.log(element);
-      offsetTimezone.push('(GMT ' + timezone().tz(element).format('Z') + ') ' + timezone().tz(element).format('zz'));
-      // console.log('(GMT' + timezone().tz(element).format('Z') + ')');
-    });
-    console.log(offsetTimezone);
-    console.log(timezone.tz.guess('zz'));
-  }
-
   getGoogleTimezone() {
-    // this.timezoneList = googletimezone;
-    // console.log(this.timezoneList);
     this.timezoneList = Object.keys(googletimezone).map((key) => {
       return googletimezone[key];
     });
   }
 
   setformzone() {
-    console.log(this.getTimezone());
     if (!this.timezoneList.includes(this.getTimezone())) {
       this.timezoneList.push(this.getTimezone());
+      // this.calendarForm.patchValue({ timezone: this.getTimezone() });
       this.calendarForm.controls['timezone'].setValue(this.getTimezone(), { onlySelf: true });
     }
   }
 
-  addCalendar(formValue: NgForm) {
+  addCalendar(formValue) {
+    if (this.calendarForm.controls.calendarauthor.value.length === 0) {
+      this.setOwnerForm();
+    }
     console.log(formValue.value);
   }
 
   selectEvent(item) {
-    // do something with selected item
-    console.log(item);
+    if (this.calendarForm.controls.calendarauthor.value.length >= 1) {
+      const profileList = _.pluck(this.calendarForm.controls.calendarauthor.value, 'email');
+      if (!_.contains(profileList, item.email)) {
+        this.setAuthorForm(item);
+      } else {
+        this.use.notFound = false;
+        this.use.clear();
+      }
+    } else {
+
+      this.setOwnerForm();
+      this.setAuthorForm(item);
+    }
+
+  }
+
+  setOwnerForm() {
+    const authorCount = this.fb.group({
+      calendarid: '',
+      userid: this.OwnerProfile.userid,
+      avatar: this.OwnerProfile.avatar,
+      email: this.OwnerProfile.email,
+      fullname: this.OwnerProfile.fullname,
+      role: 'owner',
+      isexist: true,
+    });
+    this.getCalendarAuthors.push(authorCount);
+  }
+
+  setAuthorForm(item) {
+    const authorCount = this.fb.group({
+      calendarid: '',
+      userid: item.userid,
+      avatar: item.avatar,
+      email: item.email,
+      fullname: item.fullname,
+      role: 'private',
+      isexist: true,
+    });
+    this.getCalendarAuthors.push(authorCount);
+    this.use.notFound = false;
+    this.use.clear();
+  }
+
+  setUnknownAuthor(item) {
+    const authorCount = this.fb.group({
+      calendarid: '',
+      userid: '',
+      avatar: '/assets/avatar/unknown.png',
+      email: item,
+      fullname: 'Unknown Author',
+      role: 'private',
+      isexist: false,
+    });
+    this.getCalendarAuthors.push(authorCount);
+    this.use.notFound = false;
+    this.use.clear();
   }
 
   onChangeSearch(val: string) {
+    this.emailfound = false;
     // fetch remote data from here
-    // And reassign the 'data' which is binded to 'data' property.    
-    this.data = [
-      {
-        id: 1,
-        name: 'United States of America'
-      }
-    ];
+    // And reassign the 'data' which is binded to 'data' property.
+    this.profileService.searchProfile(val)
+      .valueChanges
+      .subscribe(res => {
+        this.resp = res.data;
+        this.profile = this.resp.searchprofile;
+        const List = _.pluck(this.profile, '_id');
+        if (_.contains(List, this.OwnerProfile._id)) {
+          this.profile = _.without(this.profile, _.findWhere(this.profile, { _id: this.OwnerProfile._id }));
+        }
+      });
   }
 
   onFocused(e) {
     // do something when input is focused
-    this.data = [];
+    this.profile = [];
   }
 
-  addSearch(value: string) {
-    console.log(value);
+  addSearch(item: string) {
+
+    // check if its a valid email before proceeding.
+    // if not email, display message saying
+    if (this.ValidateEmail(item)) {
+      // check if its a valid email addres
+      if (this.calendarForm.controls.calendarauthor.value.length >= 1) {
+        const profileList = _.pluck(this.calendarForm.controls.calendarauthor.value, 'email');
+        if (!_.contains(profileList, item)) {
+          this.setUnknownAuthor(item);
+        } else {
+          this.use.notFound = false;
+          this.use.clear();
+        }
+      } else {
+        this.setOwnerForm();
+        this.setUnknownAuthor(item);
+      }
+    } else {
+      this.use.notFound = false;
+      this.emailfound = true;
+    }
+
+  }
+
+  ValidateEmail(control: string) {
+    // tslint:disable-next-line:max-line-length
+    const EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (EMAIL_REGEXP.test(String(control).toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  removeAuthor(params, index) {
+    if (this.OwnerProfile.email !== params.email) {
+      this.getCalendarAuthors.removeAt(index);
+    }
+  }
+
+  clearedUser() {
+    // this.use.notFoundText = 'User not found. Type it out and press enter to add to list';
+  }
+
+  resetCalendar() {
+    this.setCalendarForm();
   }
 
 }
