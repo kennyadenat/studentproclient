@@ -16,7 +16,9 @@ import { ProfileService } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
 import { Profile } from '../../models/profile.model';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ValidateEmailType } from '../../Validators/email.validators';
+import { CalendartypeService } from '../../services/calendartype.service';
+import { Calendartype } from '../../models/calendartype.model';
+import { CalendarService } from '../../services/calendar.service';
 import * as _ from 'underscore';
 
 
@@ -33,10 +35,12 @@ export class AddcalendarComponent implements OnInit {
   emailfound: boolean;
   currentUser: any;
   resp: any;
-  displayMonths = 3;
-  navigation = 'select';
-  showWeekNumbers = false;
-  outsideDays = 'visible';
+  calendarList: Calendartype[] = [];
+  calendarItem: Calendartype;
+  // displayMonths = 3;
+  // navigation = 'select';
+  // showWeekNumbers = false;
+  // outsideDays = 'visible';
   calendarForm: FormGroup;
   authorForm: FormGroup;
   timezoneList: any;
@@ -49,18 +53,22 @@ export class AddcalendarComponent implements OnInit {
     private router: Router,
     private actRoute: ActivatedRoute,
     private authService: AuthService,
-    private profileService: ProfileService) {
-    this.setCalendarForm();
-    this.setCalendarAuthor();
+    private profileService: ProfileService,
+    private typeService: CalendartypeService,
+    private calendarService: CalendarService
+  ) {
     this.keyword = 'fullname';
     this.currentUser = this.authService.currentUserValue;
     this.navID = this.actRoute.snapshot.params.id;
-    console.log(this.navID);
+    this.getCalendarType(this.actRoute.snapshot.params.id);
+    this.setCalendarForm();
+    this.setCalendarAuthor();
   }
 
   ngOnInit() {
     this.getGoogleTimezone();
     this.getProfile(this.currentUser._id);
+    // console.log(this.timezoneList);
   }
 
   getProfile(params) {
@@ -68,6 +76,16 @@ export class AddcalendarComponent implements OnInit {
       .subscribe(res => {
         this.resp = res.data;
         this.OwnerProfile = this.resp.profile;
+      });
+  }
+
+  getCalendarType(params: string) {
+    this.typeService.getCalendarType()
+      .valueChanges
+      .subscribe(res => {
+        this.resp = res.data;
+        this.calendarList = this.resp.calendartypes;
+        this.calendarItem = _.where(this.calendarList, { type: params })[0];
       });
   }
 
@@ -83,7 +101,7 @@ export class AddcalendarComponent implements OnInit {
       title: [null, Validators.required],
       institution: [null],
       type: [null, Validators.required],
-      color: [null],
+      icon: [null],
       note: [null],
       status: [false, Validators.required],
       timezone: ['', Validators.required],
@@ -116,10 +134,6 @@ export class AddcalendarComponent implements OnInit {
     return this.calendarForm.get('calendarauthor') as FormArray;
   }
 
-  addCalendarAuthor() { }
-
-  removeCalendarAuthor() { }
-
   ValidCalendarDate(control) {
     return control;
   }
@@ -142,7 +156,11 @@ export class AddcalendarComponent implements OnInit {
     if (this.calendarForm.controls.calendarauthor.value.length === 0) {
       this.setOwnerForm();
     }
-    console.log(formValue.value);
+    this.calendarForm.patchValue({ icon: this.calendarItem.icon });
+    this.calendarService.addCalendar(this.calendarForm.value)
+      .subscribe(res => {
+
+      });
   }
 
   selectEvent(item) {
@@ -155,16 +173,14 @@ export class AddcalendarComponent implements OnInit {
         this.use.clear();
       }
     } else {
-
       this.setOwnerForm();
       this.setAuthorForm(item);
     }
-
   }
 
   setOwnerForm() {
     const authorCount = this.fb.group({
-      calendarid: '',
+      calendarid: 'kdkkdkdk',
       userid: this.OwnerProfile.userid,
       avatar: this.OwnerProfile.avatar,
       email: this.OwnerProfile.email,
@@ -177,7 +193,7 @@ export class AddcalendarComponent implements OnInit {
 
   setAuthorForm(item) {
     const authorCount = this.fb.group({
-      calendarid: '',
+      calendarid: 'jjkkk',
       userid: item.userid,
       avatar: item.avatar,
       email: item.email,
@@ -227,22 +243,27 @@ export class AddcalendarComponent implements OnInit {
   }
 
   addSearch(item: string) {
-
     // check if its a valid email before proceeding.
+    // for future update, allow adding using mobile number
     // if not email, display message saying
     if (this.ValidateEmail(item)) {
-      // check if its a valid email addres
-      if (this.calendarForm.controls.calendarauthor.value.length >= 1) {
-        const profileList = _.pluck(this.calendarForm.controls.calendarauthor.value, 'email');
-        if (!_.contains(profileList, item)) {
-          this.setUnknownAuthor(item);
+      if (this.OwnerProfile.email !== item) {
+        // check if its a valid email addres
+        if (this.calendarForm.controls.calendarauthor.value.length >= 1) {
+          const profileList = _.pluck(this.calendarForm.controls.calendarauthor.value, 'email');
+          if (!_.contains(profileList, item)) {
+            this.setUnknownAuthor(item);
+          } else {
+            this.use.notFound = false;
+            this.use.clear();
+          }
         } else {
-          this.use.notFound = false;
-          this.use.clear();
+          this.setOwnerForm();
+          this.setUnknownAuthor(item);
         }
       } else {
-        this.setOwnerForm();
-        this.setUnknownAuthor(item);
+        this.use.notFound = false;
+        this.use.clear();
       }
     } else {
       this.use.notFound = false;

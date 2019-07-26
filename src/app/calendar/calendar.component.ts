@@ -22,14 +22,31 @@ export class CalendarComponent implements OnInit {
     const calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       header: {
-        left: 'dayGridMonth,timeGridWeek,timeGridDay,list',
+        left: 'dayGridMonth,timeGridWeek,timeGridDay,list,today',
         center: 'title',
         right: 'prevYear,prev,next,nextYear'
+      },
+      views: {
+        timeGridWeek: {
+          type: 'timeGrid',
+          duration: { days: 4 },
+          buttonText: 'week'
+        }
+      },
+      customButtons: {
+        today: {
+          text: 'today',
+          click: () => {
+            // alert('clicked custom button 1!');
+            calendar.today();
+          }
+        }
       },
       nowIndicator: true,
       eventLimit: true, // allow "more" link when too many events
       eventColor: '#ffb822',
       eventTextColor: 'white',
+      weekNumbers: true,
       eventRender: (info) => {
         const tooltip = new Tooltip(info.el, {
           title: info.event.extendedProps.description,

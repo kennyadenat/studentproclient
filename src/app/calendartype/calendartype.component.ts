@@ -21,7 +21,6 @@ export class CalendartypeComponent implements OnInit {
       .valueChanges
       .subscribe(res => {
         this.resp = res.data;
-        console.log(res.data);
         this.calendarList = this.resp.calendartypes;
       });
   }
