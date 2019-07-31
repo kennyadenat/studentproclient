@@ -32,3 +32,37 @@ mutation addcalendar(
   }
 }
 `;
+
+
+export const calendar = gql`
+query calendar($id: String, $limit: Int, $page: Int, $search: String) {
+  calendar(id: $id, limit: $limit, page: $page, search: $search) {
+    docs {
+      _id,
+      title,
+      institution,
+      timezone,
+      note,
+      type,
+      icon,
+      status
+      calendarauthor{
+        fullname,
+        userid,
+        avatar
+        role
+        avatar
+      }
+    }
+    totalDocs,
+    limit,
+    page,
+    totalPages,
+    hasNextPage,
+    nextPage,
+    hasPrevPage,
+    prevPage,
+    pagingCounter
+  }
+}
+`;

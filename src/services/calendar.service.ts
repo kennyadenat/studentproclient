@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import {
-  addCalendar
+  addCalendar,
+  calendar
 } from '../graphql/calendar';
 
 @Injectable({
@@ -27,6 +28,18 @@ export class CalendarService {
         timezone: params.timezone,
         calendarevent: params.calendarevent,
         calendarauthor: params.calendarauthor
+      }
+    });
+  }
+
+  calendar(params) {
+    return this.apollo.watchQuery({
+      query: calendar,
+      variables: {
+        id: params.id,
+        limit: params.limit,
+        page: params.page,
+        search: params.search
       }
     });
   }

@@ -14,7 +14,7 @@
             </h3>
           </div>
           <div>
-            <a [routerLink]="[ '/mycalendar/calendartype']"
+            <a data-toggle="modal" data-target="#m_quick_sidebar"
               class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
               <span>
                 <i class="la la-plus"></i>
@@ -23,6 +23,15 @@
                 </span>
               </span>
             </a>
+            <!-- <a [routerLink]="[ '/mycalendar/calendartype']"
+              class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
+              <span>
+                <i class="la la-plus"></i>
+                <span>
+                  Add Calendar
+                </span>
+              </span>
+            </a> -->
           </div>
         </div>
       </div>
@@ -67,28 +76,28 @@
 
         <div class="row">
 
-          <div class="col-xl-4">
+          <div class="col-xl-4" *ngFor="let item of calendar">
             <!--begin:: Widgets/Authors Profit-->
-            <div class="m-portlet m-portlet--bordered-semi">
+            <div class="m-portlet m-portlet--bordered-semi" style="max-height:245px">
               <div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                   <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                      First Semester Examination Timetable
+                      {{ item.title | titlecase }}
                     </h3>
                   </div>
                 </div>
                 <div class="m-portlet__head-tools">
                   <ul class="m-portlet__nav">
-                    <li
-                      class="m-portlet__nav-item m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
+                    <div
+                      class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
                       m-dropdown-toggle="hover">
-                      <a href="#"
-                        class="m-portlet__nav-link m-dropdown__toggle dropdown-toggle btn btn--sm m-btn--pill btn-secondary m-btn m-btn--label-brand">
-                        All
+                      <a href="#" class="m-portlet__nav-link m-dropdown__toggle btn m-btn m-btn--link">
+                        <i class="la la-ellipsis-h"></i>
                       </a>
-                      <div class="m-dropdown__wrapper dropdownRefined">
-                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                      <div class="m-dropdown__wrapper dropdownRefined" style="z-index: 101;">
+                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"
+                          style="left: auto; right: 22.5px;"></span>
                         <div class="m-dropdown__inner">
                           <div class="m-dropdown__body">
                             <div class="m-dropdown__content">
@@ -101,26 +110,10 @@
                                     </span>
                                   </a>
                                 </li>
-                                <li class="m-nav__item">
-                                  <a href="" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-info"></i>
-                                    <span class="m-nav__link-text">
-                                      FAQ
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__item">
-                                  <a href="" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-lifebuoy"></i>
-                                    <span class="m-nav__link-text">
-                                      Support
-                                    </span>
-                                  </a>
-                                </li>
                                 <li class="m-nav__separator m-nav__separator--fit"></li>
                                 <li class="m-nav__item">
                                   <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
-                                    Cancel
+                                    Remove
                                   </a>
                                 </li>
                               </ul>
@@ -128,7 +121,7 @@
                           </div>
                         </div>
                       </div>
-                    </li>
+                    </div>
                   </ul>
                 </div>
               </div>
@@ -136,19 +129,19 @@
                 <div class="m-widget4">
 
                   <div class="m-widget4__item">
-                    <div class="m-widget4__img m-widget4__img--logo">
-                      <img src="../../assets/app/media/img/client-logos/logo5.png" alt="">
+                    <div class="m-widget4__img m-widget4__img--logo caltype">
+                      <img src="{{item.icon}}" alt="">
                     </div>
                     <div class="m-widget4__info">
                       <span class="m-widget4__title">
-                        Examination
+                        {{ item.type | titlecase }}
                       </span>
                       <br>
                       <span class="m-widget4__sub">
-                        Make Metronic Great Again
+                        {{ item.note | lowercase }}
                       </span>
                     </div>
-                    <span class="m-widget4__ext">
+                    <span class=" m-widget4__ext">
                       <a [routerLink]="[ '/mycalendar/calendar']"
                         class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">
                         View
@@ -162,136 +155,64 @@
                     <img src="../../assets/app/media/img/client-logos/logo5.png" alt="">
                   </div> -->
                     <div class="m-widget4__info setinfo">
-                      <span class="m-widget4__title">
-                        Trump Themes
-                      </span>
-                      <br>
-                      <span class="m-widget4__sub">
-                        Make Metronic Great Again
-                      </span>
-                    </div>
-                    <span class="m-widget4__ext">
-                      <span class="m-switch m-switch--outline m-switch--sm m-switch--icon m-switch--success">
-                        <label>
-                          <input type="checkbox" checked="checked" name="">
-                          <span></span>
-                        </label>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--end:: Widgets/Authors Profit-->
-          </div>
+                      <button type="button" class="btn btn-secondary">
+                        Authors
+                      </button>
+                      <div
+                        class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
+                        m-dropdown-toggle="hover">
+                        <a href="#" class="m-portlet__nav-link m-dropdown__toggle btn m-btn m-btn--link">
+                          <i class="la la-users"></i>
+                        </a>
+                        <div class="m-dropdown__wrapper dropdownauthor" style="z-index: 101;">
+                          <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"
+                            style="left: auto; right: 22.5px;"></span>
+                          <div class="m-dropdown__inner">
+                            <div class="m-dropdown__body widgetbody">
+                              <div class="m-dropdown__content">
+                                <ul class="m-nav">
+                                  <!--Calendar Author Section-->
+                                  <div class="m-scrollable" data-scrollable="true" data-height="173"
+                                    style="height: 173px;" [hidden]="item.calendarauthor.length == 0">
+                                    <li class="m-nav__item" *ngFor="let author of item.calendarauthor">
+                                      <div class="m-widget4">
+                                        <!--begin::Widget 14 Item-->
+                                        <div class="m-widget4__item widgetauthor">
+                                          <div class="m-widget4__img m-widget4__img--pic authordrop">
+                                            <img src="{{author.avatar}}" alt="">
+                                          </div>
+                                          <div class="m-widget4__info">
+                                            <span class="m-widget4__sub subauthortext">
+                                              {{author.fullname | titlecase}}
+                                            </span>
+                                          </div>
+                                          <div class="m-widget4__ext">
+                                            <a><i class="la la-close"></i></a>
+                                          </div>
+                                        </div>
+                                        <!--end::Widget 14 Item-->
+                                      </div>
+                                    </li>
+                                  </div>
 
-          <div class="col-xl-4">
-            <!--begin:: Widgets/Authors Profit-->
-            <div class="m-portlet m-portlet--bordered-semi">
-              <div class="m-portlet__head">
-                <div class="m-portlet__head-caption">
-                  <div class="m-portlet__head-title">
-                    <h3 class="m-portlet__head-text">
-                      First Semester Examination Timetable
-                    </h3>
-                  </div>
-                </div>
-                <div class="m-portlet__head-tools">
-                  <ul class="m-portlet__nav">
-                    <li
-                      class="m-portlet__nav-item m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
-                      m-dropdown-toggle="hover">
-                      <a href="#"
-                        class="m-portlet__nav-link m-dropdown__toggle dropdown-toggle btn btn--sm m-btn--pill btn-secondary m-btn m-btn--label-brand">
-                        All
-                      </a>
-                      <div class="m-dropdown__wrapper dropdownRefined">
-                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                        <div class="m-dropdown__inner">
-                          <div class="m-dropdown__body">
-                            <div class="m-dropdown__content">
-                              <ul class="m-nav">
-                                <li class="m-nav__item">
-                                  <a href="" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-share"></i>
-                                    <span class="m-nav__link-text">
-                                      Activity
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__item">
-                                  <a href="" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-info"></i>
-                                    <span class="m-nav__link-text">
-                                      FAQ
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__item">
-                                  <a href="" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-lifebuoy"></i>
-                                    <span class="m-nav__link-text">
-                                      Support
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__separator m-nav__separator--fit"></li>
-                                <li class="m-nav__item">
-                                  <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
-                                    Cancel
-                                  </a>
-                                </li>
-                              </ul>
+                                  <li class="m-nav__separator m-nav__separator--fit"></li>
+                                  <li class="m-nav__item">
+                                    <a data-toggle="modal" data-target="#m_quick_sidebar"
+                                      class="btn btn-outline-brand m-btn m-btn--pill m-btn--wide btn-sm">
+                                      Add Author
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="m-portlet__body">
-                <div class="m-widget4">
-
-                  <div class="m-widget4__item">
-                    <div class="m-widget4__img m-widget4__img--logo">
-                      <img src="../../assets/app/media/img/client-logos/logo2.png" alt="">
-                    </div>
-                    <div class="m-widget4__info">
-                      <span class="m-widget4__title">
-                        Lecture
-                      </span>
-                      <br>
-                      <span class="m-widget4__sub">
-                        Make Metronic Great Again
-                      </span>
-                    </div>
-                    <span class="m-widget4__ext">
-                      <a [routerLink]="[ '/mycalendar/calendar']"
-                        class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">
-                        View
-                      </a>
-                    </span>
-                  </div>
-
-
-                  <div class="m-widget4__item">
-                    <!-- <div class="m-widget4__img m-widget4__img--logo">
-                      <img src="../../assets/app/media/img/client-logos/logo5.png" alt="">
-                    </div> -->
-                    <div class="m-widget4__info setinfo">
-                      <span class="m-widget4__title">
-                        Trump Themes
-                      </span>
-                      <br>
-                      <span class="m-widget4__sub">
-                        Make Metronic Great Again
-                      </span>
                     </div>
                     <span class="m-widget4__ext">
                       <span class="m-switch m-switch--outline m-switch--sm m-switch--icon m-switch--success">
                         <label>
-                          <input type="checkbox" checked="checked" name="">
+                          <input type="checkbox" [checked]="item.status" [value]="item.status">
                           <span></span>
                         </label>
                       </span>
@@ -308,3 +229,192 @@
       </div>
     </div>
   </div>
+
+
+
+  <!-- MODAL STICK UP SMALL ALERT -->
+  <div class="modal fade slide-right" id="m_quick_sidebar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content-wrapper">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Modal title
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">
+                &times;
+              </span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="tab-pane" id="m_quick_sidebar_tabs_settings" role="tabpanel">
+              <div class="m-list-settings m-scrollable">
+                <div class="m-list-settings__group">
+                  <div class="m-list-settings__heading">
+                    General Settings
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Email Notifications
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" checked="checked" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Site Tracking
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      SMS Alerts
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Backup Storage
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Audit Logs
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" checked="checked" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="m-list-settings__group">
+                  <div class="m-list-settings__heading">
+                    System Settings
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      System Logs
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Error Reporting
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Applications Logs
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Backup Servers
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" checked="checked" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="m-list-settings__item">
+                    <span class="m-list-settings__item-label">
+                      Audit Logs
+                    </span>
+                    <span class="m-list-settings__item-control">
+                      <span class="m-switch m-switch--outline m-switch--icon-check m-switch--brand">
+                        <label>
+                          <input type="checkbox" name="">
+                          <span></span>
+                        </label>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <div class="btn-toolbar" role="toolbar" aria-label="...">
+              <div class="btn-group btn-group-lg mr-2" role="group" aria-label="...">
+                <button type="button" class="m-btn btn btn-secondary">
+                  <i class="la la-file-text-o"></i>
+                </button>
+                <button type="button" class="m-btn btn btn-secondary">
+                  <i class="la la-bold"></i>
+                </button>
+                <button type="button" class="m-btn btn btn-secondary">
+                  <i class="la la-paperclip"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- END MODAL STICK UP SMALL ALERT -->

@@ -5842,6 +5842,13 @@ button.close {
   }
 }
 
+
+@media (min-width:992px) {
+  .modal-md {
+    max-width: 480px
+  }
+}
+
 .tooltip {
   position: absolute;
   z-index: 1070;
@@ -20608,8 +20615,88 @@ b, strong {
     backface-visibility: hidden
   }
 
+  /* Modal Slide Right Starts from Here */
+  .modal.fade.slide-right {
+    /*&.in{
+            .modal-dialog{
+            .translate3d(0,0,0);
+          }
+        }*/
+  }
+  .modal.fade.slide-right .close {
+    position: absolute;
+    /* top: 0; */
+    right: 0;
+    margin-right: 15px;
+    margin-top: 0px;
+    z-index: 10;
+  }
+  .modal.fade.slide-right.show .modal-dialog {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -ms-transform: translate(0, 0);
+  }
+  .modal.fade.slide-right .modal-dialog {
+    position: absolute;
+    right: 0;
+    margin: 0;
+    height: 100%;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+    -ms-transform: translate(100%, 0);
+  }
+  .modal.fade.slide-right .modal-dialog .modal-content-wrapper {
+    height: 100%;
+  }
+  .modal.fade.slide-right .modal-dialog .modal-content {
+    height: 100%;
+  }
+  .modal.fade.slide-right .modal-dialog .modal-body {
+    background-color: #fff;
+  }
+  .modal.fade.slide-right .modal-content {
+    border-radius: 0px;
+  }
+
+/*Slide Right Modal Ends Here*/
+
+
+
+
+
+
+
+
+
+
   .dropdownRefined {
     width: 150px !important;
+  }
+
+  .widgetbody {
+    padding: 15px !important;
+  }
+
+  .dropdownauthor {
+    margin-right: -50px !important;
+    width: 180px !important;
+  }
+
+  .widgetauthor {
+    padding-bottom: .45rem !important;
+  }
+
+  .authordrop img {
+    width: 2.2rem !important;
+  }
+
+  .subauthortext{
+    font-weight:500 !important;
+    color: #000 !important;
+  }
+
+  .caltype img {
+    border-radius: 0% !important;
   }
 
     .m-dropdown .m-dropdown__wrapper .m-dropdown__inner {

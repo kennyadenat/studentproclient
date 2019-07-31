@@ -103,6 +103,8 @@ export class AddcalendarComponent implements OnInit {
       type: [null, Validators.required],
       icon: [null],
       note: [null],
+      authorid: [null],
+      authorbio: [null],
       status: [false, Validators.required],
       timezone: ['', Validators.required],
       // startdate: [Date.now, Validators.required],
@@ -159,7 +161,7 @@ export class AddcalendarComponent implements OnInit {
     this.calendarForm.patchValue({ icon: this.calendarItem.icon });
     this.calendarService.addCalendar(this.calendarForm.value)
       .subscribe(res => {
-
+        console.log(res.data);
       });
   }
 
@@ -180,7 +182,7 @@ export class AddcalendarComponent implements OnInit {
 
   setOwnerForm() {
     const authorCount = this.fb.group({
-      calendarid: 'kdkkdkdk',
+      calendarid: '',
       userid: this.OwnerProfile.userid,
       avatar: this.OwnerProfile.avatar,
       email: this.OwnerProfile.email,
@@ -193,12 +195,12 @@ export class AddcalendarComponent implements OnInit {
 
   setAuthorForm(item) {
     const authorCount = this.fb.group({
-      calendarid: 'jjkkk',
+      calendarid: '',
       userid: item.userid,
       avatar: item.avatar,
       email: item.email,
       fullname: item.fullname,
-      role: 'private',
+      role: 'author',
       isexist: true,
     });
     this.getCalendarAuthors.push(authorCount);
@@ -213,7 +215,7 @@ export class AddcalendarComponent implements OnInit {
       avatar: '/assets/avatar/unknown.png',
       email: item,
       fullname: 'Unknown Author',
-      role: 'private',
+      role: 'author',
       isexist: false,
     });
     this.getCalendarAuthors.push(authorCount);
