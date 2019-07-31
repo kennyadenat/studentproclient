@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -15,7 +15,15 @@ import { RRule, RRuleSet, rrulestr } from 'rrule';
 })
 export class CalendarComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('use') use;
+  @ViewChild('secondbutt') secondbutt;
+
+  slideoption: string;
+  events: any;
+  constructor() {
+
+    this.slideoption = 'slide-right';
+  }
 
   ngOnInit() {
     this.loadCalendar();
@@ -75,11 +83,29 @@ export class CalendarComponent implements OnInit {
       height: 'auto',
       events: 'https://fullcalendar.io/demo-events.json',
       select: (info) => {
-        alert('selected ' + info.startStr + ' to ' + info.endStr);
+        // alert('selected ' + info.startStr + ' to ' + info.endStr);
+        // console.log(info);
+        // tslint:disable-next-line: deprecation
+        this.events = info.jsEvent;
+        console.log(this.events.x, this.events.y);
+        console.log('Body Position');
+        const body = document.body.getBoundingClientRect();
+        const bodyHalf = body.width / 2;
+
+        if (this.events.x >= bodyHalf) {
+          this.slideoption = 'slide-left';
+          this.secondbutt.nativeElement.click();
+        } else if (this.events.x < bodyHalf) {
+          this.slideoption = 'slide-right';
+          this.secondbutt.nativeElement.click();
+        }
+
+        console.log(body.width);
       },
-      dateClick: (info) => {
-        alert('clicked ' + info.dateStr);
-      },
+      // dateClick: (info) => {
+      //   alert('clicked ' + info.dateStr);
+      //   console.log(info);
+      // },
     });
     calendar.render();
   }
@@ -93,7 +119,7 @@ export class CalendarComponent implements OnInit {
       until: new Date(Date.UTC(2019, 12, 31))
     });
 
-    console.log(rule.all());
+    // console.log(rule.all());
   }
 
   ruleSet() {
@@ -106,7 +132,7 @@ export class CalendarComponent implements OnInit {
       dtstart: new Date(Date.UTC(2019, 7, 28, 10, 30))
     }));
 
-    console.log(rruleSet.all());
+    // console.log(rruleSet.all());
   }
 
 }

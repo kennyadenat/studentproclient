@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CalendarService } from '../../services/calendar.service';
 import { Calendar } from '../../models/calendar.model';
@@ -11,6 +11,10 @@ import { Calendar } from '../../models/calendar.model';
 
 export class MycalendarComponent implements OnInit {
 
+  @ViewChild('use') use;
+  @ViewChild('secondbutt') secondbutt;
+
+  slideoption: string;
   resp: any;
   isLoadingResult = true;
   limit = 10;
@@ -30,6 +34,7 @@ export class MycalendarComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private calendarService: CalendarService) {
+    this.slideoption = 'slide-right';
   }
 
   ngOnInit() {
@@ -41,6 +46,12 @@ export class MycalendarComponent implements OnInit {
       searchtxt: this.search,
     };
     this.getCalendar(this.extParams);
+    // this.secondbutt.nativeElement.click();
+    // document.getElementById('openModalButton').click();
+    console.log(document.getElementById('openModalButton').getBoundingClientRect());
+    // Body Position
+    console.log('Body Position');
+    console.log(document.body.getBoundingClientRect());
   }
 
   getCalendar(params) {
@@ -49,7 +60,6 @@ export class MycalendarComponent implements OnInit {
       .subscribe(res => {
         this.resp = res.data;
         this.calendar = this.resp.calendar.docs;
-        console.log(this.calendar);
       });
   }
 

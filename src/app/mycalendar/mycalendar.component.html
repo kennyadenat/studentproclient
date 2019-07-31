@@ -14,16 +14,16 @@
             </h3>
           </div>
           <div>
-            <a data-toggle="modal" data-target="#m_quick_sidebar"
+            <a #secondbutt data-toggle="modal" data-target="#m_quick_sidebar"
               class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
               <span>
                 <i class="la la-plus"></i>
                 <span>
-                  Add Calendar
+                  Modal
                 </span>
               </span>
             </a>
-            <!-- <a [routerLink]="[ '/mycalendar/calendartype']"
+            <!-- <a id="openModalButton" [routerLink]="[ '/mycalendar/calendartype']"
               class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
               <span>
                 <i class="la la-plus"></i>
@@ -32,6 +32,14 @@
                 </span>
               </span>
             </a> -->
+            <a id="openModalButton" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
+              <span>
+                <i class="la la-plus"></i>
+                <span>
+                  Add Calendar
+                </span>
+              </span>
+            </a>
           </div>
         </div>
       </div>
@@ -233,7 +241,7 @@
 
 
   <!-- MODAL STICK UP SMALL ALERT -->
-  <div class="modal fade slide-right" id="m_quick_sidebar" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade {{slideoption}}" #use id="m_quick_sidebar" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md">
       <div class="modal-content-wrapper">
         <div class="modal-content">

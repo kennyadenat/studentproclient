@@ -5740,13 +5740,14 @@ button.close {
 }
 
 .modal-backdrop {
+  display: none !important;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
-  background-color: #000
+  z-index: 0;
+  /* background-color: #000 */
 }
 
   .modal-backdrop.fade {
@@ -20661,7 +20662,50 @@ b, strong {
 /*Slide Right Modal Ends Here*/
 
 
+/* Slide Left Starts Here */
+.modal.fade.slide-left {
+  /*&.in{
+          .modal-dialog{
+          .translate3d(0,0,0);
+        }
+      }*/
+}
+.modal.fade.slide-left .close {
+  position: absolute;
+  /* top: 0; */
+  right: 0;
+  margin-right: 15px;
+  margin-top: 0px;
+  z-index: 10;
+}
+.modal.fade.slide-left.show .modal-dialog {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -ms-transform: translate(0, 0);
+}
+.modal.fade.slide-left .modal-dialog {
+  position: absolute;
+  left: 0;
+  margin: 0;
+  height: 100%;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0);
+  -ms-transform: translate(100%, 0);
+}
+.modal.fade.slide-left .modal-dialog .modal-content-wrapper {
+  height: 100%;
+}
+.modal.fade.slide-left .modal-dialog .modal-content {
+  height: 100%;
+}
+.modal.fade.slide-left .modal-dialog .modal-body {
+  background-color: #fff;
+}
+.modal.fade.slide-left .modal-content {
+  border-radius: 0px;
+}
 
+/* Slide Left Ends Here */
 
 
 
