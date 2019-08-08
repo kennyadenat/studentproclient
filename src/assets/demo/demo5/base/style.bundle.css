@@ -2079,7 +2079,7 @@ pre {
   overflow: visible;
   height: 43px !important;
   background-color: #fff;
-  border: 1px solid #ced4da;
+  border: 1px solid #888888;
 }
 
 .item{
@@ -5672,7 +5672,7 @@ button.close {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1050;
+  z-index: 10000;
   display: none;
   overflow: hidden;
   outline: 0
@@ -5846,7 +5846,7 @@ button.close {
 
 @media (min-width:992px) {
   .modal-md {
-    max-width: 480px
+    min-width: 500px
   }
 }
 
@@ -10748,7 +10748,8 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
   .modal .modal-content .modal-header {
-    padding: 25px
+    padding: 25px;
+    padding-bottom: 10px;
   }
 
     .modal .modal-content .modal-header .modal-title {
@@ -10782,7 +10783,8 @@ a.text-dark:focus, a.text-dark:hover {
       }
 
   .modal .modal-content .modal-body {
-    padding: 25px
+    padding: 25px;
+    padding-top: 7px;
   }
 
   .modal .modal-content .modal-footer {
@@ -19949,7 +19951,8 @@ b, strong {
         margin: 0;
         padding: 0;
         vertical-align: middle;
-        font-size: 1rem
+        font-size: 1rem;
+        cursor: pointer;
       }
 
       .m-nav .m-nav__item > .m-nav__link .m-nav__link-title {
@@ -20708,10 +20711,43 @@ b, strong {
 /* Slide Left Ends Here */
 
 
+.eventrole{
+  font-weight:500 !important;
+  color: #000 !important;
+}
 
+.calendarWidget {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 7px !important;
+}
 
+.eventoption {
+  cursor: pointer;
+padding-bottom: 0px !important;
+padding-top: 5px !important;
+}
 
+/* width */
+::-webkit-scrollbar {
+  width: 9px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 
   .dropdownRefined {
     width: 150px !important;
@@ -28706,8 +28742,8 @@ body.m-portlet--fullscreen {
 
 .m-widget4 .m-widget4__item {
   display: table;
-  padding-top: 1.15rem;
-  padding-bottom: 1.25rem
+  padding-top: 1rem;
+  padding-bottom: 1rem
 }
 
   .m-widget4 .m-widget4__item .m-widget4__img {
@@ -31008,8 +31044,8 @@ body.m-portlet--fullscreen {
     position: absolute;
     top: 1px;
     left: 0;
-    height: 18px;
-    width: 18px
+    height: 22px;
+    width: 22px
   }
 
     .m-checkbox > span:after, .m-radio > span:after {
@@ -34350,7 +34386,7 @@ td > .m-checkbox.m-checkbox--single, th > .m-checkbox.m-checkbox--single {
   }
 
 .form-control, .form-control[readonly] {
-  border-color: #ebedf2;
+  border-color: #888888;
   color: #575962
 }
 
@@ -35167,7 +35203,7 @@ td > .m-checkbox.m-checkbox--single, th > .m-checkbox.m-checkbox--single {
   }
 
   .m-form .m-form__seperator.m-form__seperator--space-2x {
-    margin: 30px 0
+    margin: 10px 0
   }
 
   .m-form .m-form__seperator.m-form__seperator--space-3x {
@@ -35237,6 +35273,7 @@ td > .m-checkbox.m-checkbox--single, th > .m-checkbox.m-checkbox--single {
   padding-left: 30px;
   padding-right: 30px
 }
+
 
 @media (min-width:1025px) {
   .m-form .m-form__section.m-form__section--label-align-right .m-form__group > label, .m-form.m-form--label-align-right .m-form__group > label {
@@ -38765,13 +38802,17 @@ td > .m-checkbox.m-checkbox--single, th > .m-checkbox.m-checkbox--single {
   }
 
 .m-scrollable:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y, .m-scroller:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y {
-  background: #bdc3d4;
-  opacity: 1
+  background: #000;
+  opacity: 1;
+  overflow: auto !important;
+  overflow-y: auto !important;
 }
 
-  .m-scrollable:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y:focus, .m-scrollable:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y:hover, .m-scroller:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y:focus, .m-scroller:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y:hover {
+  .m-scrollable:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y:focus, .m-scrollable:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y, .m-scroller:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y:focus, .m-scroller:not(.m-scrollable--track) > .ps__rail-y > .ps__thumb-y {
     opacity: 1;
-    background: #bdc3d4
+    background: #000;
+    overflow: auto !important;
+    overflow-y: auto !important;
   }
 
 .ps {
@@ -38788,10 +38829,11 @@ td > .m-checkbox.m-checkbox--single, th > .m-checkbox.m-checkbox--single {
   }
 
 .m-scrollable {
-  overflow: hidden;
   margin-right: -14px;
   padding-right: 14px;
-  position: relative
+  position: relative;
+  /* overflow: auto !important; */
+  overflow-y: auto !important;
 }
 
 .jstree-default .jstree-disabled {
@@ -41433,14 +41475,15 @@ select.m-select2 {
   }
 
   .fc-unthemed .fc-event .fc-time, .fc-unthemed .fc-event-dot .fc-time {
-    font-size: .85rem;
+    font-size: .95rem;
     text-transform: uppercase;
     font-weight: 600
   }
 
   .fc-unthemed .fc-event .fc-title, .fc-unthemed .fc-event-dot .fc-title {
-    font-size: .85rem;
-    font-weight: 400
+    font-size: .90rem;
+    font-weight: 400;
+    text-transform: lowercase;
   }
 
 .fc-unthemed .fc-description {
@@ -41450,7 +41493,7 @@ select.m-select2 {
 }
 
 .fc-unthemed .fc-list-item-title > a {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 500
 }
 
@@ -41639,11 +41682,11 @@ select.m-select2 {
   }
 
   .fc-unthemed .fc-event .fc-time, .fc-unthemed .fc-event-dot .fc-time {
-    color: #333439
+    /* color: #333439 */
   }
 
   .fc-unthemed .fc-event .fc-title, .fc-unthemed .fc-event-dot .fc-title {
-    color: #3f4047
+    /* color: #3f4047 */
   }
 
 .fc-unthemed .fc-description {

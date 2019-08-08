@@ -18,4 +18,12 @@ export const allgeneric = gql`{
     icon
     description
   }
+  colors{
+    color
+    code
+    textcolor
+  }
+  roles{
+    role
+  }
 }`;

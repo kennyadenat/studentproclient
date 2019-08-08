@@ -4,6 +4,9 @@ import {
   addCalendar,
   calendar
 } from '../graphql/calendar';
+import {
+  allgeneric
+} from '../graphql/generic';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +17,13 @@ export class CalendarService {
     private apollo: Apollo
   ) { }
 
+  getcalendarOption() {
+    return this.apollo.watchQuery({
+      query: allgeneric
+    });
+  }
+
   addCalendar(params) {
-    console.log(params);
     return this.apollo.mutate({
       mutation: addCalendar,
       variables: {

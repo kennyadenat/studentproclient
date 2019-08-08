@@ -46,12 +46,6 @@ export class MycalendarComponent implements OnInit {
       searchtxt: this.search,
     };
     this.getCalendar(this.extParams);
-    // this.secondbutt.nativeElement.click();
-    // document.getElementById('openModalButton').click();
-    console.log(document.getElementById('openModalButton').getBoundingClientRect());
-    // Body Position
-    console.log('Body Position');
-    console.log(document.body.getBoundingClientRect());
   }
 
   getCalendar(params) {

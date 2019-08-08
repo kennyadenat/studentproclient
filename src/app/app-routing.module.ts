@@ -61,7 +61,7 @@ const routes: Routes = [ // otherwise redirect to home
         data: { title: 'Seed Samples' }
       },
       {
-        path: 'mycalendar/calendar',
+        path: 'mycalendar/calendar/:id',
         component: CalendarComponent,
         data: { title: 'Seed Samples' }
       },

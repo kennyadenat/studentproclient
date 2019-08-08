@@ -14,16 +14,8 @@
             </h3>
           </div>
           <div>
-            <a #secondbutt data-toggle="modal" data-target="#m_quick_sidebar"
-              class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
-              <span>
-                <i class="la la-plus"></i>
-                <span>
-                  Modal
-                </span>
-              </span>
-            </a>
-            <!-- <a id="openModalButton" [routerLink]="[ '/mycalendar/calendartype']"
+
+            <a id="openModalButton" [routerLink]="[ '/mycalendar/calendartype']"
               class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
               <span>
                 <i class="la la-plus"></i>
@@ -31,15 +23,8 @@
                   Add Calendar
                 </span>
               </span>
-            </a> -->
-            <a id="openModalButton" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
-              <span>
-                <i class="la la-plus"></i>
-                <span>
-                  Add Calendar
-                </span>
-              </span>
             </a>
+
           </div>
         </div>
       </div>
@@ -150,7 +135,7 @@
                       </span>
                     </div>
                     <span class=" m-widget4__ext">
-                      <a [routerLink]="[ '/mycalendar/calendar']"
+                      <a [routerLink]="[ '/mycalendar/calendar', item._id]"
                         class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">
                         View
                       </a>
@@ -167,7 +152,7 @@
                         Authors
                       </button>
                       <div
-                        class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
+                        class="m-dropdown m-dropdown--up m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
                         m-dropdown-toggle="hover">
                         <a href="#" class="m-portlet__nav-link m-dropdown__toggle btn m-btn m-btn--link">
                           <i class="la la-users"></i>
