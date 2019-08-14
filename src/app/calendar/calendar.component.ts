@@ -15,17 +15,31 @@ import { ProfileService } from '../../services/profile.service';
 import { CalendarService } from '../../services/calendar.service';
 /* Import Models */
 import { Institution, } from '../../models/institution.model';
+import { Profile } from '../../models/profile.model';
 import { Color } from '../../models/color.model';
 import { Role } from '../../models/role.model';
 import { Calendarevent } from '../../models/calendarevent.model';
 /* FullCalendar Plugins */
 import { Calendar } from '@fullcalendar/core';
+import rrulePlugin from '@fullcalendar/rrule';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import Tooltip from 'tooltip.js';
 import interactionPlugin from '@fullcalendar/interaction';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
+import {
+  timeArrays,
+  currentTimeArray,
+  setStartTime,
+  setDefaultTime,
+  mergeDefaultTime,
+  setEndTime,
+  eventEndTime,
+  convertToMinutes,
+  convertToDuration,
+  mergeDateTime
+} from '../../calendar/timehelper';
 import * as FuzzySearch from 'fuzzy-search';
 import * as _ from 'underscore';
 
@@ -56,9 +70,10 @@ export class CalendarComponent implements OnInit {
   respData: any;
   userKeyword = 'institution';
   roleKeyword = 'role';
-  startKeyword = 'time';
-  endKeyword = 'time';
-
+  startKeyword = '';
+  endKeyword = '';
+  ruleText: string;
+  currentUser: any;
 
   private institutionContext: Institution[];
   private institutionContexts: Institution[];
@@ -72,6 +87,9 @@ export class CalendarComponent implements OnInit {
   private Colors: Color[];
   private Roles: Role[];
   private Role: Role[];
+  private profile: Profile[];
+  OwnerProfile: Profile;
+
   calendarEl: any;
   calendar: any;
   /* Event Form Group */
@@ -84,205 +102,108 @@ export class CalendarComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {
-
+    this.currentUser = this.authService.currentUserValue;
     this.navID = this.actRoute.snapshot.params.id;
     this.slideoption = 'slide-right';
   }
 
 
   ngOnInit() {
-    // this.currentTimeArray();
-    this.startTime = this.timeArrays();
+    this.ruleText = 'Does not repeat';
+    this.startTime = timeArrays();
     this.setEventForm();
     this.loadCalendar(this.Calendarevent);
 
     this.getCalendarOption();
-    // this.rule();
-    this.ruleSet();
     this.eventFormGroup
       .valueChanges
       .subscribe(res => {
         if (res) {
+          console.log(res);
           this.addEvents(res);
         }
       });
   }
 
 
-  timeArrays() {
-    const x = 30; // minutes interval
-    const times = []; // time array
-    let tt = 0; // start time
-    const ap = ['AM', 'PM']; // AM-PM
-
-    // loop to increment the time and push results in array
-    for (let i = 0; tt < 24 * 60; i++) {
-      const hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
-      const mm = (tt % 60); // getting minutes of the hour in 0-55 format
-      // tslint:disable-next-line:max-line-length
-      // times[i] = ('0' + (hh % 12)).slice(-2) + ':' + ('0' + mm).slice(-2) + ' ' + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
-      tt = tt + x;
-
-      const extTime = {
-        // tslint:disable-next-line:max-line-length
-        time: hh + ':' + ('0' + mm).slice(-2) + ' ' + ap[Math.floor(hh / 12)], // pushing data in array in [00:00 - 12:00 AM/PM format]
-        ext: ''
-      };
-
-      times.push(extTime);
-    }
-    return times;
-  }
-
-
-  currentTimeArray(startDate) {
-    // get the current datetime
-    const interval = 30;
-    const arr = [];
-    const tt = 0; // start time
-    const ap = ['AM', 'PM']; // AM-PM
-
-    // loop to increment the time and push results in array
-    for (let i = 0; i < 48; i++) {
-      //  const hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
-      startDate.setMinutes(startDate.getMinutes() + interval);
-      const minutes = i * interval + interval;
-      const extTime = {
-        // tslint:disable-next-line:max-line-length
-        time: startDate.getHours() + ':' + ('0' + startDate.getMinutes()).slice(-2) + ' ' + ap[Math.floor(startDate.getHours() / 12)],
-        ext: ' (' + this.convertToMinutes(minutes) + ')'
-      };
-
-      arr.push(extTime);
-    }
-    this.endTime = arr;
-    return arr;
-  }
-
-  setStartTime() {
-    // get the current datetime
-    const date = new Date();
-    const interval = 30;
-    const tt = 0; // start time
-    const ap = ['AM', 'PM']; // AM-PM
-    const minutes = interval;
-    // tslint:disable-next-line:max-line-length
-    return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)];
-
-    // tslint:disable-next-line:max-line-length
-    // return ('0' + (date.getHours() % 12)).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)];
-  }
-
-  setEndTime() {
-    // get the current datetime
-    const date = new Date();
-    const interval = 30;
-    const arr = [];
-    const tt = 0; // start time
-    const ap = ['AM', 'PM']; // AM-PM
-
-    date.setMinutes(date.getMinutes() + interval);
-    const minutes = interval;
-    const extTime = {
-      // tslint:disable-next-line:max-line-length
-      time: ('0' + (date.getHours() % 12)).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)],
-      ext: ' (' + this.convertToMinutes(minutes) + ')'
-    };
-
-    // tslint:disable-next-line:max-line-length
-    // return ('0' + (date.getHours() % 12)).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)];
-
-    // tslint:disable-next-line:max-line-length
-    return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)];
-  }
-
-  eventEndTime(date) {
-    // get the current datetime
-    // const date = new Date();
-    const interval = 30;
-    const arr = [];
-    const tt = 0; // start time
-    const ap = ['AM', 'PM']; // AM-PM
-
-    date.setMinutes(date.getMinutes() + interval);
-    const minutes = interval;
-    const extTime = {
-      // tslint:disable-next-line:max-line-length
-      time: ('0' + (date.getHours() % 12)).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)],
-      ext: ' (' + this.convertToMinutes(minutes) + ')'
-    };
-
-    // tslint:disable-next-line:max-line-length
-    // return ('0' + (date.getHours() % 12)).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)];
-
-    // tslint:disable-next-line:max-line-length
-    return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ' ' + ap[Math.floor(date.getHours() / 12)];
-  }
-
-  /* covert to minutes */
-  convertToMinutes(n) {
-    const num = n;
-    const hours = (num / 60);
-    const rhours = Math.floor(hours);
-    const minutes = (hours - rhours) * 60;
-    const rminutes = Math.round(minutes);
-    return rhours + 'hr ' + rminutes + ' mins';
-  }
-
-  mergeDateTime(day, time) {
-    let hours = Number(time.match(/^(\d+)/)[1]);
-    const minutes = Number(time.match(/:(\d+)/)[1]);
-    const AMPM = time.match(/\s(.*)$/)[1];
-
-
-    if (AMPM === 'PM' && hours < 12) {
-      hours = hours + 12;
-    }
-    if (AMPM === 'AM' && hours === 12) {
-      hours = hours - 12;
-    }
-    let sHours = hours.toString();
-    let sMinutes = minutes.toString();
-    if (hours < 10) {
-      sHours = '0' + sHours;
-    }
-    if (minutes < 10) {
-      sMinutes = '0' + sMinutes;
-    }
-    time = sHours + ':' + sMinutes + ':00';
-
-    const d = new Date(day);
-    const n = d.toISOString().substring(0, 10);
-    const newDate = new Date(n + 'T' + time);
-    return newDate;
-  }
-
 
   addEvents(res: any) {
-    const event = this.calendar.getEventById('aaaaa');
+    const event = this.calendar.getEventById(res.id);
+
     if (event) {
+
       event.remove();
+
+      if (!res.starttime) {
+        console.log('here');
+        res.starttime = setStartTime();
+      }
+      if (!res.endtime) {
+        res.starttime = setEndTime();
+      }
+
+      const timeStarts = mergeDateTime(res.start, res.starttime);
+      const timeEnds = mergeDateTime(res.end, res.endtime);
+      const x = moment(timeStarts);
+      const y = moment(timeEnds);
+      const duration = moment.duration(y.diff(x)).asMinutes();
+      const durations = convertToDuration(duration);
+
+      this.calendar.addEvent({
+        id: res.id,
+        title: res.event,
+        start: timeStarts.toISOString(),
+        end: timeEnds.toISOString(),
+        allDay: res.allDay,
+        color: res.backgroundColor.color,
+        textColor: res.backgroundColor.textcolor,
+        rrule: {
+          freq: res.rrule.freq,
+          count: res.rrule.count,
+          interval: res.rrule.interval,
+          dtstart: timeStarts.toISOString(),
+          until: res.until
+        },
+        duration: durations.toString()
+      });
+
+    } else {
+      console.log('no event');
+      const x = moment(res.start);
+      const y = moment(res.end);
+      const duration = moment.duration(y.diff(x)).asMinutes();
+      const durations = convertToDuration(duration);
+
+      this.calendar.addEvent({
+        id: res.id,
+        title: res.event,
+        start: res.start.toISOString(),
+        end: res.end.toISOString(),
+        allDay: res.allDay,
+        color: res.backgroundColor.color,
+        textColor: res.backgroundColor.textcolor,
+        rrule: {
+          freq: res.rrule.freq,
+          count: res.rrule.count,
+          interval: res.rrule.interval,
+          dtstart: res.start.toISOString(),
+          until: '2019-12-01'
+        },
+        duration: durations.toString()
+      });
     }
 
-    this.calendar.addEvent({
-      id: 'aaaaa',
-      title: res.event,
-      start: res.start,
-      end: res.end,
-      allDay: res.allDay,
-      color: res.backgroundColor.color,
-      textColor: res.backgroundColor.textcolor
-    });
   }
-
 
   setEventForm() {
     this.eventFormGroup = this.fb.group({
+      id: [null, Validators.required],
       calendarid: [null, Validators.required],
       userid: [null, Validators.required],
       event: ['', Validators.required],
       start: [Validators.required],
       end: [Validators.required],
+      until: [Date.now],
       allDay: [false, Validators.required],
       starttime: [null],
       endtime: [null],
@@ -293,22 +214,29 @@ export class CalendarComponent implements OnInit {
       location: [''],
       note: [''],
       selectEventRole: this.fb.array([]),
-      rrule: this.fb.array([]),
+      rrule: {},
       Calendareventrole: this.fb.array([]),
     });
   }
-
 
   get f() {
     return this.eventFormGroup.controls;
   }
 
-
   loadCalendar(calendarEvents) {
     this.calendarEl = document.getElementById('calendar');
     this.calendar = new Calendar(this.calendarEl, {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, rrulePlugin],
       navLinks: true,
+      displayEventTime: true,
+      nowIndicator: true,
+      eventLimit: true, // allow "more" link when too many events
+      eventColor: '#fff',
+      eventTextColor: '#000',
+      weekNumbers: true,
+      editable: true,
+      selectable: true,
+      height: 'auto',
       header: {
         left: 'dayGridMonth,timeGridDay,timeGridWeek,timeGridWeeks,list,today',
         center: 'title',
@@ -335,14 +263,25 @@ export class CalendarComponent implements OnInit {
           }
         }
       },
-      displayEventTime: true,
-      nowIndicator: true,
-      eventLimit: true, // allow "more" link when too many events
-      eventColor: '#fff',
-      eventTextColor: '#000',
-      weekNumbers: true,
-      editable: true,
-      selectable: true,
+      events: [
+        {
+          // standard property
+          title: 'MTS',
+          start: '2019-07-26',
+          end: '2019-08-03',
+          // ...or, an object...
+          rrule: {
+            freq: 'weekly',
+            count: 30,
+            interval: 1,
+            dtstart: '2019-07-28T10:30:00',
+            until: '2019-12-01'
+          },
+
+          // for specifying the end time of each instance
+          duration: '24:0'
+        }
+      ],
       eventRender: (info) => {
         const tooltip = new Tooltip(info.el, {
           title: info.event.extendedProps.description,
@@ -351,9 +290,8 @@ export class CalendarComponent implements OnInit {
           container: 'body'
         });
       },
-      height: 'auto',
-      events: '',
       select: (info) => {
+        this.ruleText = 'Does not repeat';
 
         const event = this.calendar.getEventById('aaaaa');
         if (event) {
@@ -365,19 +303,32 @@ export class CalendarComponent implements OnInit {
         const ends = moment(info.end).subtract(1, 'd').toDate();
 
         /// calculate the starttime and endtime for the forms
-        const timeStarts = this.mergeDateTime(info.startStr, this.setStartTime());
-        const timeEnds = moment(this.mergeDateTime(info.endStr, this.setEndTime())).subtract(1, 'd').toDate();
+        const timeStarts = mergeDateTime(info.startStr, setStartTime());
+        const timeEnds = moment(mergeDateTime(info.endStr, setEndTime())).subtract(1, 'd').toDate();
+        // const timeEnds = this.mergeDateTime(info.endStr, this.setEndTime());
+
 
         this.eventFormGroup.patchValue({
+          id: 'aaaaa',
           event: '',
           start: timeStarts,
           end: timeEnds,
-          starttime: this.setStartTime(),
-          endtime: this.setEndTime(),
-          allDay: false
+          starttime: setStartTime(),
+          endtime: setEndTime(),
+          allDay: false,
+          until: '2019-12-01',
+          rrule: {
+            freq: '',
+            dtstart: timeStarts,
+            count: 30,
+            interval: 1,
+            until: '2019-12-01'
+          }
         });
 
-        this.currentTimeArray(this.mergeDateTime(info.startStr, this.setStartTime()));
+        this.allday = true;
+
+        this.endTime = currentTimeArray(mergeDateTime(info.startStr, setStartTime()));
 
         // tslint:disable-next-line: deprecation
         this.events = info.jsEvent;
@@ -393,24 +344,26 @@ export class CalendarComponent implements OnInit {
         }
       },
       dateClick: (info) => {
+      },
+      eventClick: (info) => {
+        const eventObj = info.event;
 
-        console.log(info);
+        if (eventObj.url) {
+          alert(
+            'Clicked ' + eventObj.title + '.\n' +
+            'Will open ' + eventObj.url + ' in a new tab'
+          );
+
+          window.open(eventObj.url);
+
+          info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
+        } else {
+          alert('Clicked ' + eventObj.title);
+        }
       },
     });
     this.calendar.render();
 
-  }
-
-  rule() {
-    const rule = new RRule({
-      freq: RRule.WEEKLY,
-      interval: 5,
-      count: 30,
-      dtstart: new Date(Date.UTC(2019, 7, 28)),
-      until: new Date(Date.UTC(2019, 12, 31))
-    });
-
-    // console.log(rule.all());
   }
 
   getCalendarOption() {
@@ -426,15 +379,12 @@ export class CalendarComponent implements OnInit {
 
   ruleSet() {
     const rruleSet = new RRuleSet();
-
     // Add a rrule to rruleSet
     rruleSet.rrule(new RRule({
       freq: RRule.WEEKLY,
       count: 5,
       dtstart: new Date(Date.UTC(2019, 7, 28, 10, 30))
     }));
-
-    // console.log(rruleSet.all());
   }
 
   selectEventUser(item) {
@@ -444,26 +394,25 @@ export class CalendarComponent implements OnInit {
   }
 
   selectEventStart(item) {
-    const starts = this.mergeDateTime(this.eventFormGroup.value.start, item.time);
-    const timePatch = this.eventEndTime(starts);
+    const starts = mergeDateTime(this.eventFormGroup.value.start, item);
+    const timePatch = eventEndTime(mergeDateTime(this.eventFormGroup.value.start, item));
     // tslint:disable-next-line:max-line-length
-    const ends = this.mergeDateTime(this.eventFormGroup.value.end, timePatch);
+    const ends = mergeDateTime(this.eventFormGroup.value.end, timePatch);
 
     this.eventFormGroup.patchValue({
-      end: this.mergeDateTime(this.eventFormGroup.value.end, timePatch),
-      endtime: this.eventEndTime(this.mergeDateTime(this.eventFormGroup.value.start, item.time)),
-      start: moment(this.mergeDateTime(this.eventFormGroup.value.start, item.time)).toDate(),
-      starttime: item.time,
+      endtime: timePatch,
+      starttime: item,
       allDay: false
     });
 
-    this.currentTimeArray(starts);
+    this.endTime = currentTimeArray(mergeDateTime(this.eventFormGroup.value.start, item));
   }
 
   selectEventEnd(item) {
+    console.log(item);
     this.eventFormGroup.patchValue({
-      end: this.mergeDateTime(this.eventFormGroup.value.end, item.time),
-      endtime: item.time,
+      end: mergeDateTime(this.eventFormGroup.value.end, item),
+      endtime: item,
       allDay: false
     });
   }
@@ -493,7 +442,7 @@ export class CalendarComponent implements OnInit {
   onChangeSearchStart(val: string) {
     // fetch remote data from here
     // And reassign the 'data' which is binded to 'data' property.
-    const searcher = new FuzzySearch(this.startTime, ['time'], {
+    const searcher = new FuzzySearch(this.startTime, {
       caseSensitive: true,
     });
     const result = searcher.search(val);
@@ -505,7 +454,7 @@ export class CalendarComponent implements OnInit {
   onChangeSearchEnd(val: string) {
     // fetch remote data from here
     // And reassign the 'data' which is binded to 'data' property.
-    const searcher = new FuzzySearch(this.endTime, ['time'], {
+    const searcher = new FuzzySearch(this.endTime, {
       caseSensitive: true,
     });
     const result = searcher.search(val);
@@ -520,7 +469,7 @@ export class CalendarComponent implements OnInit {
   }
 
   clearedStart(e) {
-    this.startTimes = this.timeArrays();
+    this.startTimes = timeArrays();
   }
 
   clearedEnd(e) {
@@ -538,11 +487,124 @@ export class CalendarComponent implements OnInit {
   addSearchEnd(value: string) {
   }
 
-  checkAllDay() {
-    this.allday = !this.allday;
-    this.eventFormGroup.patchValue({
-      allDay: !this.allday
+  checkAllDay(events) {
+    const state = this.allday;
+
+    if (state === true) {
+
+      const start = new Date(events.value.start);
+      const starts = new Date(start.toISOString().substring(0, 10) + 'T00:00:00');
+
+      const end = new Date(events.value.end);
+      const ends = new Date(end.toISOString().substring(0, 10) + 'T20:00:00');
+
+      this.eventFormGroup.patchValue({
+        id: events.value.id,
+        start: starts,
+        end: moment(ends).add(1, 'd').toDate(),
+        starttime: setDefaultTime(),
+        endtime: setDefaultTime(),
+        allDay: true
+      });
+      this.allday = false;
+    } else if (state === false) {
+      const timeStarts = mergeDateTime(events.value.start, setStartTime());
+      const timeEnds = mergeDateTime(events.value.end, setEndTime());
+      this.eventFormGroup.patchValue({
+        id: events.value.id,
+        start: moment(timeStarts).add(1, 'd').toDate(),
+        end: moment(timeEnds).subtract(1, 'd').toDate(),
+        starttime: setStartTime(),
+        endtime: setEndTime(),
+        allDay: false
+      });
+      this.allday = true;
+    }
+
+
+  }
+
+  rule(params) {
+    const rule = new RRule({
+      freq: RRule.DAILY,
+      interval: 1,
+      count: 30,
+      dtstart: new Date(Date.UTC(2019, 7, 28)),
+      until: new Date(Date.UTC(2019, 12, 31))
     });
+
+
+    // const rule = new RRule(params);
+    return rule;
+
+  }
+
+  setRule(option, eventForm) {
+    const rules = {
+      freq: '',
+      interval: 1,
+      dtstart: '2019-08-01T10:30:00',
+      until: '2019-12-01',
+    };
+
+    switch (option) {
+      case 'none': {
+        this.ruleText = 'Does not repeat';
+        break;
+      }
+      case 'daily': {
+        this.ruleText = 'Daily';
+        rules.freq = 'daily';
+        rules.dtstart = eventForm.value.start;
+        this.eventFormGroup.patchValue({
+          rrule: rules
+        });
+        break;
+      }
+      case 'weekly': {
+        this.ruleText = 'Weekly';
+        rules.freq = 'weekly';
+        rules.dtstart = eventForm.value.start;
+        this.eventFormGroup.patchValue({
+          rrule: rules
+        });
+        break;
+      }
+      case 'monthly': {
+        this.ruleText = 'Monthly';
+        rules.freq = 'monthly';
+        rules.dtstart = eventForm.value.start;
+        this.eventFormGroup.patchValue({
+          rrule: rules
+        });
+        break;
+      }
+      case 'anually': {
+        this.ruleText = 'Anually';
+        rules.freq = 'anually';
+        rules.dtstart = eventForm.value.start;
+        this.eventFormGroup.patchValue({
+          rrule: rules
+        });
+        break;
+      }
+      case 'allweek': {
+        this.ruleText = 'Week Days';
+        rules.dtstart = eventForm.value.start;
+        // rules.byweekday = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR];
+        this.eventFormGroup.patchValue({
+          rrule: rules
+        });
+        break;
+      }
+      case 'custom': {
+        this.ruleText = 'Custom';
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
 }

@@ -1,0 +1,312 @@
+<div class="m-scrollable m-scroller ps ps--active-y ps--active-x" data-scrollable="true" data-height="770"
+  style="height: 770px; overflow: hidden;">
+  <!--begin::Form-->
+  <form class="m-form m-form--fit" [formGroup]="eventFormGroup" #f="ngForm">
+    <div class="m-portlet__body">
+      <div class="m-form__section m-form__section--first">
+        <div class="form-group m-form__group calendarWidget">
+          <div class="m-input-icon m-input-icon--left">
+            <input type="text" class="form-control m-input" placeholder="Event, Course or Subject"
+              formControlName="event">
+            <span class="m-input-icon__icon m-input-icon__icon--left">
+              <span>
+                <i class="la la-calendar-plus-o"></i>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group m-form__group calendarWidget">
+          <div class="m-input-icon m-input-icon--left">
+            <input type="text" class="form-control m-input" placeholder="Location, Venue, Auditorium"
+              formControlName="location">
+            <span class="m-input-icon__icon m-input-icon__icon--left">
+              <span>
+                <i class="la la-map-marker"></i>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group m-form__group row calendarWidget">
+
+          <div class="col-lg-4">
+            <div class="m-input-icon m-input-icon--left">
+              <input type="text" class="form-control m-input" placeholder="yyyy-mm-dd" name="start"
+                (click)="st.toggle()" [displayMonths]="displayMonths" [navigation]="navigation"
+                [outsideDays]="outsideDays" [showWeekNumbers]="showWeekNumbers" ngbDatepicker #st="ngbDatepicker"
+                formControlName="start">
+              <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span>
+                  <i class="la la-calendar"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="m-input-icon m-input-icon--left">
+              <input type="text" class="form-control m-input" placeholder="yyyy-mm-dd" name="end" (click)="en.toggle()"
+                [displayMonths]="displayMonths" [navigation]="navigation" [outsideDays]="outsideDays"
+                [showWeekNumbers]="showWeekNumbers" ngbDatepicker #en="ngbDatepicker" formControlName="end">
+              <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span>
+                  <i class="la la-calendar"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <!-- <a (click)="allday=!allday"
+            class="m-portlet__nav-link btn btn--sm btn-brand m-btn m-btn--label-brand">
+            ALL DAY SLOT <i class="la la-refresh"></i>
+          </a> -->
+            <button (click)="checkAllDay()" [ngClass]="allday ? 'btn-brand' : 'btn-secondary'"
+              class="btn m-btn m-btn--custom m-btn--icon m-btn--air">
+              <span>
+                <span>
+                  ALL DAY
+                </span>
+                <i class="la la-calendar"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group m-form__group row calendarWidget" [hidden]="!allday">
+          <div class="col-lg-6">
+            <div class="m-input-icon m-input-icon--left" style="z-index: 6">
+              <div class="ng-autocomplete" style="width: 100% !important">
+                <ng-autocomplete #startdrop [data]="startTimes" [searchKeyword]="startKeyword" placeHolder="Time Starts"
+                  (selected)='selectEventStart($event)' (inputCleared)="clearedStart($event)"
+                  [itemTemplate]="itemTemplateStart" minQueryLength=1 (inputChanged)='onChangeSearchStart($event)'
+                  notFoundText='User not found. type it out and press enter to add to list'
+                  [notFoundTemplate]="notFoundTemplateStart" #searchstart
+                  (keydown.enter)="addSearchStart(searchstart.query)" formControlName="starttime">
+                </ng-autocomplete>
+                <ng-template class="templateitem" #itemTemplateStart let-item>
+                  <div class="item">
+                    <!-- <img src="{{item.flag}}" height="25"> -->
+                    <span [innerHTML]="item.time"></span>
+                  </div>
+                </ng-template>
+                <ng-template #notFoundTemplateStart let-notFound>
+                  <div [innerHTML]="notFound"></div>
+                </ng-template>
+              </div>
+              <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span>
+                  <i class="la la-clock-o"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="m-input-icon m-input-icon--left">
+              <div class="ng-autocomplete" style="width: 100% !important">
+                <ng-autocomplete #enddrop [data]="endTime" [searchKeyword]="endKeyword" placeHolder="Time Ends"
+                  (selected)='selectEventEnd($event)' (inputCleared)="clearedEnd($event)"
+                  [itemTemplate]="itemTemplateEnd" minQueryLength=1 (inputChanged)='onChangeSearchEnd($event)'
+                  notFoundText='User not found. type it out and press enter to add to list'
+                  [notFoundTemplate]="notFoundTemplateEnd" #searchend (keydown.enter)="addSearchEnd(searchuser.query)"
+                  formControlName="endtime">
+                </ng-autocomplete>
+                <ng-template class="templateitem" #itemTemplateEnd let-item>
+                  <div class="item">
+                    <!-- <img src="{{item.flag}}" height="25"> -->
+                    <span [innerHTML]="item.time"></span> <span [innerHTML]="item.ext"></span>
+                  </div>
+                </ng-template>
+                <ng-template #notFoundTemplateEnd let-notFound>
+                  <div [innerHTML]="notFound"></div>
+                </ng-template>
+              </div>
+              <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span>
+                  <i class="la la-clock-o"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group m-form__group row eventoption">
+
+          <div class="btn-toolbar" role="toolbar" aria-label="...">
+            <div class="btn-group mr-2" role="group" aria-label="...">
+              <button (click)="eventoption=!eventoption" type="button"
+                [ngClass]="eventoption ? 'btn-brand' : 'btn-secondary'"
+                class="btn m-btn m-btn--custom m-btn--icon m-btn--air">
+                event option <i class="la la-plus"></i>
+              </button>
+            </div>
+
+            <div class="btn-group mr-2" role="group" aria-label="...">
+              <button type="button" class="btn m-btn btn-secondary m-btn--custom m-btn--icon m-btn--air">
+                recurring <i class="la la-refresh"></i>
+              </button>
+
+            </div>
+
+            <div class="btn-group" role="group" aria-label="...">
+              <button type="button" class="m-btn btn btn-secondary">
+                <i class="la la-scissors"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!--Option Controls Starts Here-->
+        <div class="form-group m-form__group row calendarWidget" [hidden]="!eventoption">
+          <div class="col-lg-6">
+            <div class="m-input-icon m-input-icon--left">
+              <input type="text" class="form-control m-input" placeholder="Course Code">
+              <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span>
+                  <i class="la la-pause"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="m-input-icon m-input-icon--left">
+              <input type="text" class="form-control m-input" placeholder="Unit">
+              <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span>
+                  <i class="la la-pause"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!--Option Controls Ends Here-->
+
+        <div class="form-group m-form__group calendarWidget">
+          <div class="m-radio-inline">
+            <label class="m-radio lg m-radio--solid {{item.code}}" *ngFor="let item of Colors; let i=index">
+              <input type="radio" [value]="item" formControlName="backgroundColor">
+              <span></span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x sectionHalf">
+      </div>
+
+      <div class="m-form__section m-form__section--first">
+        <div class="form-group m-form__group calendarWidget">
+          <div class="m-input-icon m-input-icon--left" style="z-index: 4">
+            <div class="ng-autocomplete" style="width: 100% !important">
+              <ng-autocomplete #user [data]="institutionContexts" [searchKeyword]="userKeyword"
+                placeHolder="Add User and Role" (selected)='selectEventUser($event)'
+                (inputCleared)="clearedUser($event)" [itemTemplate]="itemTemplateUser" minQueryLength=2
+                (inputChanged)='onChangeSearchUser($event)'
+                notFoundText='User not found. type it out and press enter to add to list'
+                [notFoundTemplate]="notFoundTemplateUser" #searchuser (keydown.enter)="addSearchUser(searchuser.query)">
+              </ng-autocomplete>
+              <ng-template class="templateitem" #itemTemplateUser let-item>
+                <div class="item">
+                  <!-- <img src="{{item.flag}}" height="25"> -->
+                  <span [innerHTML]="item.institution"></span>
+                </div>
+              </ng-template>
+              <ng-template #notFoundTemplateUser let-notFound>
+                <div [innerHTML]="notFound"></div>
+              </ng-template>
+            </div>
+            <span class="m-input-icon__icon m-input-icon__icon--left">
+              <span>
+                <i class="la la-calendar-plus-o"></i>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group m-form__group calendarWidget">
+          <div class="m-widget4">
+            <div>
+              <!--begin::Widget 14 Item-->
+              <div class="m-widget4__item">
+                <div class="m-widget4__img m-widget4__img--pic authorpix">
+                  <img src="../../assets/app/media/img/users/100_4.jpg" alt="">
+                </div>
+                <div class="m-widget4__info">
+                  <span class="m-widget4__title authortitle">
+                    Anna Strong
+                  </span>
+                  <br>
+                  <span class="m-widget4__sub">
+                    kennyadenat09@gmail.com
+                  </span>
+                  <br>
+                  <span class="m-widget4__sub eventrole">
+
+                  </span>
+                </div>
+                <div class="m-widget4__ext">
+
+                  <div class="btn-toolbar" role="toolbar" aria-label="...">
+                    <div class="btn-group mr-2" role="group" aria-label="...">
+
+                      <button type="button" class="m-btn btn btn-secondary">
+                        <i class="la la-close"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--end::Widget 14 Item-->
+              <div class="m-widget4__item" style="padding-top: 0.1rem">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" style="display: inherit !important">
+                  <label class="btn btn-success active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked="">
+                    <i class="flaticon-notes"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option2" autocomplete="off">
+                    <i class="flaticon-avatar"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="flaticon-information"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="flaticon-users"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="flaticon-puzzle"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="flaticon-download"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="flaticon-settings-1"></i>
+                  </label>
+                  <label class="btn btn-success">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="flaticon-notes"></i>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="m-widget11__action m--align-left">
+            <div class="dataTables_paginate paging_simple_numbers" id="m_table_1_paginate">
+              <ngb-pagination [collectionSize]="40" [(page)]="page" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!--end::Form-->
+</div>

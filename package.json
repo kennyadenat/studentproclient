@@ -31,6 +31,7 @@
     "@fullcalendar/interaction": "^4.2.0",
     "@fullcalendar/list": "^4.2.0",
     "@fullcalendar/resource-timeline": "^4.2.0",
+    "@fullcalendar/rrule": "^4.2.0",
     "@fullcalendar/timegrid": "^4.2.0",
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "angular-ng-autocomplete": "^1.1.13",
@@ -63,6 +64,7 @@
     "tslib": "^1.9.0",
     "typescript": "~3.2.2",
     "underscore": "^1.9.1",
+    "uuid": "^3.3.2",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

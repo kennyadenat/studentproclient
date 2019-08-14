@@ -5846,7 +5846,7 @@ button.close {
 
 @media (min-width:992px) {
   .modal-md {
-    min-width: 500px
+    min-width: 520px
   }
 }
 
@@ -10748,8 +10748,8 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
   .modal .modal-content .modal-header {
-    padding: 25px;
-    padding-bottom: 10px;
+    /* padding: 25px;
+    padding-bottom: 10px; */
   }
 
     .modal .modal-content .modal-header .modal-title {
@@ -10784,11 +10784,13 @@ a.text-dark:focus, a.text-dark:hover {
 
   .modal .modal-content .modal-body {
     padding: 25px;
-    padding-top: 7px;
+    padding-top: 5px;
   }
 
   .modal .modal-content .modal-footer {
-    padding: 25px
+    padding: 25px;
+    padding-top:6px;
+    padding-bottom:6px;
   }
 
 .modal-open {
@@ -10802,7 +10804,8 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
   .modal .modal-content .modal-header .modal-title {
-    color: #3f4047
+    color: #3f4047;
+    padding: 10px;
   }
 
   .modal .modal-content .modal-header .close span {
@@ -20699,7 +20702,7 @@ b, strong {
   height: 100%;
 }
 .modal.fade.slide-left .modal-dialog .modal-content {
-  height: 100%;
+  min-height: 100%;
 }
 .modal.fade.slide-left .modal-dialog .modal-body {
   background-color: #fff;
@@ -20709,7 +20712,13 @@ b, strong {
 }
 
 /* Slide Left Ends Here */
+.modalportlet {
+  padding: 0px !important;
+}
 
+.sectionHalf {
+  margin: 40px 0 5px 0 !important;
+}
 
 .eventrole{
   font-weight:500 !important;
@@ -20720,13 +20729,14 @@ b, strong {
   padding-left: 0px !important;
   padding-right: 0px !important;
   padding-bottom: 0px !important;
-  padding-top: 7px !important;
+  padding-top: 5px !important;
 }
 
 .eventoption {
   cursor: pointer;
-padding-bottom: 0px !important;
-padding-top: 5px !important;
+  padding-bottom: 0px !important;
+  padding-top: 5px !important;
+  padding-left: 20px !important;
 }
 
 /* width */
@@ -21293,7 +21303,7 @@ padding-top: 5px !important;
   }
 
   .m-tabs-line .m-tabs__item {
-    margin-right: 30px;
+    margin-right: 10px;
     margin-bottom: -1px
   }
 
@@ -21305,7 +21315,7 @@ padding-top: 5px !important;
     border: 0;
     border-bottom: 1px solid transparent;
     padding: 12px 0;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 400
   }
 

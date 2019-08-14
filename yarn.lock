@@ -346,6 +346,11 @@
     "@fullcalendar/resource-common" "~4.2.0"
     "@fullcalendar/timeline" "~4.2.0"
 
+"@fullcalendar/rrule@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-4.2.0.tgz#43042b9a4230939bce56b0c655aa24703192eaf2"
+  integrity sha512-BZaHoio6rPYPmhI5HmmtvLsJJWZ52HrBZElyBOqFrzYkU2gSaA3iIl6hebB1hBoKLmtAZRHcbMcZ4n/QybG2iw==
+
 "@fullcalendar/timegrid@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.2.0.tgz#e2372ba108f5da8e38c915366c2101b4365ff409"
