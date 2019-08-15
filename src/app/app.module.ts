@@ -10,6 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { JwtInterceptor } from '../helpers/jwt.interceptor';
 import { ErrorInterceptor } from '../helpers/error.interceptor';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 
 import { LoginComponent } from './login/login.component';
@@ -32,6 +33,8 @@ import { AddcalendarComponent } from './addcalendar/addcalendar.component';
 import { SubscribedComponent } from './subscribed/subscribed.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { AuthredirectComponent } from './authredirect/authredirect.component';
+
+export let options: Partial<IConfig> | (() => Partial<IConfig>);
 
 @NgModule({
   declarations: [
@@ -66,7 +69,8 @@ import { AuthredirectComponent } from './authredirect/authredirect.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    AutocompleteLibModule
+    AutocompleteLibModule,
+    NgxMaskModule.forRoot(options)
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

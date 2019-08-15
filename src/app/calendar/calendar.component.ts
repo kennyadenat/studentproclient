@@ -68,7 +68,7 @@ export class CalendarComponent implements OnInit {
   navID: string;
   resp: any;
   respData: any;
-  userKeyword = 'institution';
+  userKeyword = 'fullname';
   roleKeyword = 'role';
   startKeyword = '';
   endKeyword = '';
@@ -94,6 +94,7 @@ export class CalendarComponent implements OnInit {
   calendar: any;
   /* Event Form Group */
   eventFormGroup: FormGroup;
+  eventRoleGroup: FormGroup;
 
   constructor(
     private authService: AuthService,
@@ -113,19 +114,26 @@ export class CalendarComponent implements OnInit {
     this.startTime = timeArrays();
     this.setEventForm();
     this.loadCalendar(this.Calendarevent);
+    this.getProfile(this.currentUser._id);
 
     this.getCalendarOption();
     this.eventFormGroup
       .valueChanges
       .subscribe(res => {
         if (res) {
-          console.log(res);
+          // console.log(res);
           this.addEvents(res);
         }
       });
   }
 
-
+  getProfile(params) {
+    this.profileService.getOneProfile(params)
+      .subscribe(res => {
+        this.resp = res.data;
+        this.OwnerProfile = this.resp.profile;
+      });
+  }
 
   addEvents(res: any) {
     const event = this.calendar.getEventById(res.id);
@@ -135,40 +143,68 @@ export class CalendarComponent implements OnInit {
       event.remove();
 
       if (!res.starttime) {
-        console.log('here');
         res.starttime = setStartTime();
       }
       if (!res.endtime) {
         res.starttime = setEndTime();
       }
 
-      const timeStarts = mergeDateTime(res.start, res.starttime);
-      const timeEnds = mergeDateTime(res.end, res.endtime);
-      const x = moment(timeStarts);
-      const y = moment(timeEnds);
-      const duration = moment.duration(y.diff(x)).asMinutes();
-      const durations = convertToDuration(duration);
+      if (res.allDay === false) {
 
-      this.calendar.addEvent({
-        id: res.id,
-        title: res.event,
-        start: timeStarts.toISOString(),
-        end: timeEnds.toISOString(),
-        allDay: res.allDay,
-        color: res.backgroundColor.color,
-        textColor: res.backgroundColor.textcolor,
-        rrule: {
-          freq: res.rrule.freq,
-          count: res.rrule.count,
-          interval: res.rrule.interval,
-          dtstart: timeStarts.toISOString(),
-          until: res.until
-        },
-        duration: durations.toString()
-      });
+        const timeStarts = mergeDateTime(res.start, res.starttime);
+        const timeEnds = mergeDateTime(res.end, res.endtime);
+        const x = moment(timeStarts);
+        const y = moment(timeEnds);
+        const duration = moment.duration(y.diff(x)).asMinutes();
+        const durations = convertToDuration(duration);
+
+        this.calendar.addEvent({
+          id: res.id,
+          title: res.event,
+          start: timeStarts.toISOString(),
+          end: timeEnds.toISOString(),
+          allDay: res.allDay,
+          color: res.backgroundcolor.color,
+          textColor: res.backgroundcolor.textcolor,
+          rrule: {
+            freq: res.rrule.freq,
+            count: res.rrule.count,
+            interval: res.rrule.interval,
+            dtstart: timeStarts.toISOString(),
+            until: res.until
+          },
+          duration: durations.toString()
+        });
+
+      } else if (res.allDay === true) {
+
+        const timeStarts = mergeDateTime(res.start, res.starttime);
+        const timeEnds = moment(mergeDateTime(res.end, res.endtime)).add(1, 'd').toDate();
+        const x = moment(timeStarts);
+        const y = moment(timeEnds);
+        const duration = moment.duration(y.diff(x)).asMinutes();
+        const durations = convertToDuration(duration);
+
+        this.calendar.addEvent({
+          id: res.id,
+          title: res.event,
+          start: timeStarts.toISOString(),
+          end: timeEnds.toISOString(),
+          allDay: res.allDay,
+          color: res.backgroundcolor.color,
+          textColor: res.backgroundcolor.textcolor,
+          rrule: {
+            freq: res.rrule.freq,
+            count: res.rrule.count,
+            interval: res.rrule.interval,
+            dtstart: timeStarts.toISOString(),
+            until: res.until
+          },
+          duration: durations.toString()
+        });
+      }
 
     } else {
-      console.log('no event');
       const x = moment(res.start);
       const y = moment(res.end);
       const duration = moment.duration(y.diff(x)).asMinutes();
@@ -180,8 +216,8 @@ export class CalendarComponent implements OnInit {
         start: res.start.toISOString(),
         end: res.end.toISOString(),
         allDay: res.allDay,
-        color: res.backgroundColor.color,
-        textColor: res.backgroundColor.textcolor,
+        color: res.backgroundcolor.color,
+        textColor: res.backgroundcolor.textcolor,
         rrule: {
           freq: res.rrule.freq,
           count: res.rrule.count,
@@ -208,19 +244,48 @@ export class CalendarComponent implements OnInit {
       starttime: [null],
       endtime: [null],
       duration: [null],
-      backgroundColor: ['', Validators.required],
-      textColor: ['', Validators.required],
+      backgroundcolor: ['', Validators.required],
+      textcolor: ['', Validators.required],
       editable: [false, Validators.required],
       location: [''],
       note: [''],
-      selectEventRole: this.fb.array([]),
       rrule: {},
-      Calendareventrole: this.fb.array([]),
+      calendareventrole: this.fb.array([]),
+    });
+  }
+
+  setEventRole() {
+    this.eventRoleGroup = this.fb.group({
+      calendarid: '',
+      eventid: '',
+      userid: '',
+      avatar: '',
+      email: '',
+      identityid: '',
+      fullname: '',
+      role: '',
+      isexist: false,
     });
   }
 
   get f() {
     return this.eventFormGroup.controls;
+  }
+
+  get getCalendarEventRole() {
+    return this.eventFormGroup.get('calendareventrole') as FormArray;
+  }
+
+  setCalendarEventRole(item) {
+    const eventAuthor = this.fb.group({
+      calendarid: '',
+      userid: item.userid,
+      avatar: item.avatar,
+      email: item.email,
+      fullname: item.fullname,
+      role: 'author',
+      isexist: true,
+    });
   }
 
   loadCalendar(calendarEvents) {
@@ -269,6 +334,7 @@ export class CalendarComponent implements OnInit {
           title: 'MTS',
           start: '2019-07-26',
           end: '2019-08-03',
+          allDay: true,
           // ...or, an object...
           rrule: {
             freq: 'weekly',
@@ -316,7 +382,7 @@ export class CalendarComponent implements OnInit {
           starttime: setStartTime(),
           endtime: setEndTime(),
           allDay: false,
-          until: '2019-12-01',
+          until: moment(timeStarts).add(12, 'M').toDate(),
           rrule: {
             freq: '',
             dtstart: timeStarts,
@@ -388,6 +454,7 @@ export class CalendarComponent implements OnInit {
   }
 
   selectEventUser(item) {
+
   }
 
   selectEventRole(item) {
@@ -409,7 +476,6 @@ export class CalendarComponent implements OnInit {
   }
 
   selectEventEnd(item) {
-    console.log(item);
     this.eventFormGroup.patchValue({
       end: mergeDateTime(this.eventFormGroup.value.end, item),
       endtime: item,
@@ -420,12 +486,16 @@ export class CalendarComponent implements OnInit {
   onChangeSearchUser(val: string) {
     // fetch remote data from here
     // And reassign the 'data' which is binded to 'data' property.
-    const searcher = new FuzzySearch(this.institutionContext, ['institution'], {
-      caseSensitive: true,
-    });
-    const result = searcher.search(val);
-    this.institutionContexts = [];
-    this.institutionContexts = result;
+    this.profileService.searchProfile(val)
+      .valueChanges
+      .subscribe(res => {
+        this.resp = res.data;
+        this.profile = this.resp.searchprofile;
+        const List = _.pluck(this.profile, '_id');
+        if (_.contains(List, this.OwnerProfile._id)) {
+          this.profile = _.without(this.profile, _.findWhere(this.profile, { _id: this.OwnerProfile._id }));
+        }
+      });
   }
 
   onChangeSearchRole(val: string) {
@@ -489,6 +559,7 @@ export class CalendarComponent implements OnInit {
 
   checkAllDay(events) {
     const state = this.allday;
+    console.log(state);
 
     if (state === true) {
 
@@ -500,20 +571,22 @@ export class CalendarComponent implements OnInit {
 
       this.eventFormGroup.patchValue({
         id: events.value.id,
-        start: starts,
-        end: moment(ends).add(1, 'd').toDate(),
-        starttime: setDefaultTime(),
-        endtime: setDefaultTime(),
+        // start: starts,
+        // end: moment(ends).add(1, 'd').toDate(),
+        // starttime: setDefaultTime(),
+        // endtime: setDefaultTime(),
         allDay: true
       });
       this.allday = false;
     } else if (state === false) {
+
+
       const timeStarts = mergeDateTime(events.value.start, setStartTime());
       const timeEnds = mergeDateTime(events.value.end, setEndTime());
       this.eventFormGroup.patchValue({
         id: events.value.id,
-        start: moment(timeStarts).add(1, 'd').toDate(),
-        end: moment(timeEnds).subtract(1, 'd').toDate(),
+        start: mergeDateTime(events.value.start, setStartTime()),
+        end: mergeDateTime(events.value.end, setEndTime()),
         starttime: setStartTime(),
         endtime: setEndTime(),
         allDay: false

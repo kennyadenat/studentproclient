@@ -15,7 +15,7 @@
           </div>
           <div>
             <a #secondbutt data-toggle="modal" data-target="#m_quick_sidebar" style="display: none"
-              class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
+              class="btn btn-secondary m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
               <span>
                 <i class="la la-plus"></i>
                 <span>
@@ -84,7 +84,7 @@
             <div class="m-portlet m-portlet--tabs">
               <div class="m-portlet__head">
                 <div class="m-portlet__head-tools">
-                  <ul class="nav nav-tabs  m-tabs-line m-tabs-line--brand" role="tablist">
+                  <ul class="nav nav-tabs  m-tabs-line m-tabs-line--secondary" role="tablist">
                     <li class="nav-item m-tabs__item">
                       <a class="nav-link m-tabs__link active show" data-toggle="tab" href="#m_tabs_9_1" role="tab"
                         aria-selected="true">
@@ -110,7 +110,7 @@
                 <div class="m-portlet__head-caption">
                   <div class="m-portlet__head-title">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-accent  m-btn m-btn--icon m-btn--wide m-btn--md">
+                      <button type="button" class="btn btn-secondary  m-btn m-btn--icon m-btn--wide m-btn--md">
                         <span>
                           <i class="la la-check"></i>
                           <span>
@@ -119,7 +119,7 @@
                         </span>
                       </button>
                       <button type="button"
-                        class="btn btn-accent  dropdown-toggle dropdown-toggle-split m-btn m-btn--md"
+                        class="btn btn-secondary  dropdown-toggle dropdown-toggle-split m-btn m-btn--md"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                       <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="#">
@@ -203,7 +203,7 @@
                         </div>
 
                         <div class="col-lg-4">
-                          <button (click)="checkAllDay(f)" [ngClass]="allday ? 'btn-brand' : 'btn-secondary'"
+                          <button (click)="checkAllDay(f)" [ngClass]="allday ? 'btn-secondary' : 'btn-secondary'"
                             class="btn m-btn m-btn--custom m-btn--icon">
                             <span>
                               <span>
@@ -217,6 +217,7 @@
 
                       <div class="form-group m-form__group row calendarWidget" [hidden]="!allday">
                         <div class="col-lg-6">
+                          <!-- <input mask="00:00:00"> -->
                           <div class="m-input-icon m-input-icon--left" style="z-index: 6">
                             <div class="ng-autocomplete" style="width: 100% !important">
                               <ng-autocomplete #startdrop [data]="startTimes" [searchKeyword]="startKeyword"
@@ -291,7 +292,7 @@
                         <div class="col-lg-6">
                           <div class="btn-group">
                             <button style="width: 185px" type="button"
-                              class="btn btn-brand  m-btn m-btn--icon m-btn--wide m-btn--md">
+                              class="btn btn-secondary  m-btn m-btn--icon m-btn--wide m-btn--md">
                               <span>
                                 <i class="la la-check"></i>
                                 <span>
@@ -300,7 +301,7 @@
                               </span>
                             </button>
                             <button type="button"
-                              class="btn btn-brand  dropdown-toggle dropdown-toggle-split m-btn m-btn--md"
+                              class="btn btn-secondary  dropdown-toggle dropdown-toggle-split m-btn m-btn--md"
                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                             <div class="dropdown-menu dropdown-menu-right">
                               <a class="dropdown-item" (click)="setRule('none', f)">
@@ -356,56 +357,8 @@
                         <div class="btn-toolbar" role="toolbar" aria-label="...">
 
                           <div class="btn-group mr-2" role="group" aria-label="...">
-
-                            <div class="btn-group">
-                              <button type="button" class="btn btn-brand  m-btn m-btn--icon m-btn--wide m-btn--md">
-                                <span>
-                                  <i class="la la-check"></i>
-                                  <span>
-                                    {{ruleText}}
-                                  </span>
-                                </span>
-                              </button>
-                              <button type="button"
-                                class="btn btn-brand  dropdown-toggle dropdown-toggle-split m-btn m-btn--md"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                              <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" (click)="setRule('none', f)">
-                                  <i class="la la-plus"></i>
-                                  Does not repeat
-                                </a>
-                                <a class="dropdown-item" (click)="setRule('daily')">
-                                  <i class="la la-plus"></i>
-                                  Daily
-                                </a>
-                                <a class="dropdown-item" (click)="setRule('weekly')">
-                                  <i class="la la-copy"></i>
-                                  Weekly on Tuesday
-                                </a>
-                                <a class="dropdown-item" (click)="setRule('monthly')">
-                                  <i class="la la-undo"></i>
-                                  Monthly on second Tuesday
-                                </a>
-                                <a class="dropdown-item" (click)="setRule('anually')">
-                                  <i class="la la-undo"></i>
-                                  Annually on August 13
-                                </a>
-                                <a class="dropdown-item" (click)="setRule('allweek')">
-                                  <i class="la la-undo"></i>
-                                  Every Weekday (Monday to Friday)
-                                </a>
-                                <a class="dropdown-item" (click)="setRule('custom')">
-                                  <i class="la la-undo"></i>
-                                  Set Custom
-                                </a>
-                              </div>
-                            </div>
-
-                          </div>
-
-                          <div class="btn-group mr-2" role="group" aria-label="...">
                             <button (click)="eventoption=!eventoption" type="button"
-                              [ngClass]="eventoption ? 'btn-brand' : 'btn-secondary'"
+                              [ngClass]="eventoption ? 'btn-secondary' : 'btn-secondary'"
                               class="btn m-btn m-btn--custom m-btn--icon">
                               event options <i class="la la-plus"></i>
                             </button>
@@ -451,7 +404,7 @@
                         <div class="m-radio-inline">
                           <label class="m-radio lg m-radio--solid {{item.code}}"
                             *ngFor="let item of Colors; let i=index">
-                            <input type="radio" [value]="item" formControlName="backgroundColor">
+                            <input type="radio" [value]="item" formControlName="backgroundcolor">
                             <span></span>
                           </label>
                         </div>
@@ -471,7 +424,7 @@
                       <div class="form-group m-form__group calendarWidget">
                         <div class="m-input-icon m-input-icon--left" style="z-index: 4">
                           <div class="ng-autocomplete" style="width: 100% !important">
-                            <ng-autocomplete #user [data]="institutionContexts" [searchKeyword]="userKeyword"
+                            <ng-autocomplete #user [data]="profile" [searchKeyword]="userKeyword"
                               placeHolder="Add User and Role" (selected)='selectEventUser($event)'
                               (inputCleared)="clearedUser($event)" [itemTemplate]="itemTemplateUser" minQueryLength=2
                               (inputChanged)='onChangeSearchUser($event)'
@@ -479,10 +432,25 @@
                               [notFoundTemplate]="notFoundTemplateUser" #searchuser
                               (keydown.enter)="addSearchUser(searchuser.query)">
                             </ng-autocomplete>
-                            <ng-template class="templateitem" #itemTemplateUser let-item>
+
+                            <ng-template #itemTemplateUser let-item>
                               <div class="item">
-                                <!-- <img src="{{item.flag}}" height="25"> -->
-                                <span [innerHTML]="item.institution"></span>
+                                <div class="m-widget4">
+                                  <div class="m-widget4__item" style="padding-bottom: 0px; padding-top:0px">
+                                    <div class="m-widget4__img m-widget4__img--logo">
+                                      <img src="{{item.avatar}}" alt="">
+                                    </div>
+                                    <div class="m-widget4__info">
+                                      <span class="m-widget4__title" [innerHTML]="item.fullname">
+                                      </span>
+                                      <br>
+                                      <span class="m-widget4__sub" [innerHTML]="item.email">
+                                      </span>
+                                    </div>
+                                    <span class="m-widget4__ext">
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </ng-template>
 

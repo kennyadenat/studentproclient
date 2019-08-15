@@ -146,6 +146,7 @@ export class AddcalendarComponent implements OnInit {
     });
   }
 
+  // this sets the default timezone for calendarforms
   setformzone() {
     if (!this.timezoneList.includes(this.getTimezone())) {
       this.timezoneList.push(this.getTimezone());

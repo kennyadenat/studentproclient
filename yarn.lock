@@ -327,6 +327,11 @@
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.2.0.tgz#c49a9e27baf40b5a637a5d8fffa2670f19ed636b"
 
+"@fullcalendar/google-calendar@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/google-calendar/-/google-calendar-4.3.0.tgz#ad2fc7f15d641bf1cbadc4b0c2a8d83089106890"
+  integrity sha512-U/KjK0kVgNKeVUzyvK7CBVEtLP3mIfE3EVjTQ9rULRzsq2NqZO5PIptAsr5X4HYEThJt3jtHMJ8S0dSLMwWk8w==
+
 "@fullcalendar/interaction@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.2.0.tgz#312e83f575aed67c33aec69884664d436aaedef2"
@@ -4597,6 +4602,13 @@ ngx-chips@^2.0.2:
   resolved "https://registry.yarnpkg.com/ngx-chips/-/ngx-chips-2.0.2.tgz#bf1342d8d6a741d86e506f7ab51b0d49e9191416"
   dependencies:
     ng2-material-dropdown "0.10.1"
+    tslib "^1.9.0"
+
+ngx-mask@^8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/ngx-mask/-/ngx-mask-8.0.3.tgz#7851e6209ad91cb09936ed79075f70de7d293805"
+  integrity sha512-Kj8DnxvhHVOuDTS/9cQz33k6iM2eucKWuaLfoNMs8NGXrRxIHeLeLgrfuA0UPG/G5Yq9MGhC0MFAV3V63ANJOQ==
+  dependencies:
     tslib "^1.9.0"
 
 ngx-socket-io@^2.1.1:
