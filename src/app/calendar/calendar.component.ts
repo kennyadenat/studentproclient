@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbDateAdapter, NgbDateStruct, NgbDateNativeAdapter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateAdapter, NgbDateStruct, NgbDateNativeAdapter, NgbDate, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject, merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
@@ -43,6 +45,14 @@ import {
 import * as FuzzySearch from 'fuzzy-search';
 import * as _ from 'underscore';
 
+const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
+  'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
+  'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
+  'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
+  'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+  'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
+  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Islands', 'Virginia',
+  'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
 @Component({
   selector: 'app-calendar',
@@ -53,9 +63,19 @@ import * as _ from 'underscore';
 export class CalendarComponent implements OnInit {
 
   @ViewChild('use') use;
+  @ViewChild('user') user;
   @ViewChild('secondbutt') secondbutt;
   @ViewChild('st') start;
   @ViewChild('en') end;
+
+  model: any;
+
+
+
+  @ViewChild('instance') instance: NgbTypeahead;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+
 
   slideoption: string;
   events: any;
@@ -74,6 +94,7 @@ export class CalendarComponent implements OnInit {
   endKeyword = '';
   ruleText: string;
   currentUser: any;
+  display: any;
 
   private institutionContext: Institution[];
   private institutionContexts: Institution[];
@@ -92,6 +113,7 @@ export class CalendarComponent implements OnInit {
 
   calendarEl: any;
   calendar: any;
+
   /* Event Form Group */
   eventFormGroup: FormGroup;
   eventRoleGroup: FormGroup;
@@ -110,18 +132,26 @@ export class CalendarComponent implements OnInit {
 
 
   ngOnInit() {
+
+    this.display = {
+      week: '',
+      month: '',
+      annual: ''
+    };
     this.ruleText = 'Does not repeat';
     this.startTime = timeArrays();
     this.setEventForm();
     this.loadCalendar(this.Calendarevent);
     this.getProfile(this.currentUser._id);
-
+    this.setEventRole();
     this.getCalendarOption();
+
     this.eventFormGroup
       .valueChanges
       .subscribe(res => {
-        if (res) {
-          // console.log(res);
+        this.setMomentDisplay(res.start);
+        if (res.id === null) {
+        } else {
           this.addEvents(res);
         }
       });
@@ -135,7 +165,16 @@ export class CalendarComponent implements OnInit {
       });
   }
 
+  setMomentDisplay(date) {
+    this.display = {
+      week: moment(date).format('dddd'),
+      month: moment(date).format('Do '),
+      annual: moment(date).format('MMMM Do')
+    };
+  }
+
   addEvents(res: any) {
+
     const event = this.calendar.getEventById(res.id);
 
     if (event) {
@@ -146,7 +185,7 @@ export class CalendarComponent implements OnInit {
         res.starttime = setStartTime();
       }
       if (!res.endtime) {
-        res.starttime = setEndTime();
+        res.endtime = setEndTime();
       }
 
       if (res.allDay === false) {
@@ -233,19 +272,19 @@ export class CalendarComponent implements OnInit {
 
   setEventForm() {
     this.eventFormGroup = this.fb.group({
-      id: [null, Validators.required],
-      calendarid: [null, Validators.required],
-      userid: [null, Validators.required],
+      id: '',
+      calendarid: ['', Validators.required],
+      userid: ['', Validators.required],
       event: ['', Validators.required],
-      start: [Validators.required],
-      end: [Validators.required],
+      start: ['', Validators.required],
+      end: ['', Validators.required],
       until: [Date.now],
       allDay: [false, Validators.required],
-      starttime: [null],
-      endtime: [null],
-      duration: [null],
-      backgroundcolor: ['', Validators.required],
-      textcolor: ['', Validators.required],
+      starttime: [''],
+      endtime: [''],
+      duration: [''],
+      backgroundcolor: '',
+      textcolor: '',
       editable: [false, Validators.required],
       location: [''],
       note: [''],
@@ -264,6 +303,7 @@ export class CalendarComponent implements OnInit {
       identityid: '',
       fullname: '',
       role: '',
+      roleoptions: this.fb.array([]),
       isexist: false,
     });
   }
@@ -274,18 +314,6 @@ export class CalendarComponent implements OnInit {
 
   get getCalendarEventRole() {
     return this.eventFormGroup.get('calendareventrole') as FormArray;
-  }
-
-  setCalendarEventRole(item) {
-    const eventAuthor = this.fb.group({
-      calendarid: '',
-      userid: item.userid,
-      avatar: item.avatar,
-      email: item.email,
-      fullname: item.fullname,
-      role: 'author',
-      isexist: true,
-    });
   }
 
   loadCalendar(calendarEvents) {
@@ -357,22 +385,15 @@ export class CalendarComponent implements OnInit {
         });
       },
       select: (info) => {
+        //  this.setEventForm();
         this.ruleText = 'Does not repeat';
-
-        const event = this.calendar.getEventById('aaaaa');
-        if (event) {
-          event.remove();
-        }
-
-        /* this adds a day to the eventend time as its usually a day
-         back on display */
-        const ends = moment(info.end).subtract(1, 'd').toDate();
 
         /// calculate the starttime and endtime for the forms
         const timeStarts = mergeDateTime(info.startStr, setStartTime());
         const timeEnds = moment(mergeDateTime(info.endStr, setEndTime())).subtract(1, 'd').toDate();
         // const timeEnds = this.mergeDateTime(info.endStr, this.setEndTime());
 
+        // this.eventFormGroup.reset();
 
         this.eventFormGroup.patchValue({
           id: 'aaaaa',
@@ -389,7 +410,8 @@ export class CalendarComponent implements OnInit {
             count: 30,
             interval: 1,
             until: '2019-12-01'
-          }
+          },
+          calendareventrole: []
         });
 
         this.allday = true;
@@ -416,7 +438,7 @@ export class CalendarComponent implements OnInit {
 
         if (eventObj.url) {
           alert(
-            'Clicked ' + eventObj.title + '.\n' +
+            'Clicked ' + eventObj + '.\n' +
             'Will open ' + eventObj.url + ' in a new tab'
           );
 
@@ -424,7 +446,8 @@ export class CalendarComponent implements OnInit {
 
           info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
         } else {
-          alert('Clicked ' + eventObj.title);
+          // alert('Clicked ' + info);
+          console.log(info.event);
         }
       },
     });
@@ -439,7 +462,7 @@ export class CalendarComponent implements OnInit {
         this.resp = res.data;
         this.institutionContext = this.resp.institutions;
         this.Colors = this.resp.colors;
-        this.Roles = this.resp.roles;
+        this.Roles = this.resp.roleoptions;
       });
   }
 
@@ -453,7 +476,46 @@ export class CalendarComponent implements OnInit {
     }));
   }
 
+  setCalendarEventRole(item) {
+    this.eventRoleGroup = this.fb.group({
+      calendarid: '',
+      eventid: '',
+      userid: item._id,
+      avatar: item.avatar,
+      email: item.email,
+      identityid: '',
+      fullname: item.fullname,
+      role: '',
+      roleoptions: this.fb.array([]),
+      isexist: false,
+    });
+
+    this.Roles.forEach(roles => {
+      const roleoptions = {
+        role: roles.role,
+        icon: roles.icon,
+      };
+
+      this.eventRoleGroup.value.roleoptions.push(roleoptions);
+    });
+
+    this.getCalendarEventRole.push(this.eventRoleGroup);
+    this.user.notFound = false;
+    this.user.clear();
+  }
+
   selectEventUser(item) {
+    if (this.eventFormGroup.controls.calendareventrole.value.length >= 1) {
+      const profileList = _.pluck(this.eventFormGroup.controls.calendareventrole.value, 'email');
+      if (!_.contains(profileList, item.email)) {
+        this.setCalendarEventRole(item);
+      } else {
+        this.user.notFound = false;
+        this.user.clear();
+      }
+    } else {
+      this.setCalendarEventRole(item);
+    }
 
   }
 
@@ -539,7 +601,7 @@ export class CalendarComponent implements OnInit {
   }
 
   clearedStart(e) {
-    this.startTimes = timeArrays();
+    // this.startTimes = timeArrays();
   }
 
   clearedEnd(e) {
@@ -559,7 +621,6 @@ export class CalendarComponent implements OnInit {
 
   checkAllDay(events) {
     const state = this.allday;
-    console.log(state);
 
     if (state === true) {
 
@@ -605,8 +666,6 @@ export class CalendarComponent implements OnInit {
       dtstart: new Date(Date.UTC(2019, 7, 28)),
       until: new Date(Date.UTC(2019, 12, 31))
     });
-
-
     // const rule = new RRule(params);
     return rule;
 
@@ -678,6 +737,38 @@ export class CalendarComponent implements OnInit {
         break;
       }
     }
+  }
+
+  toggleRole(role, options) {
+    this.eventFormGroup.value.calendareventrole.forEach((element, index) => {
+      if (element.email === role.email) {
+        // this.eventFormGroup.value.calendareventrole[index].role ? options.role  options.role : '';
+        // tslint:disable-next-line:max-line-length
+        this.eventFormGroup.value.calendareventrole[index].role === options.role ? this.eventFormGroup.value.calendareventrole[index].role = '' : this.eventFormGroup.value.calendareventrole[index].role = options.role;
+      }
+    });
+
+    // map function. .
+    // const roles = this.eventFormGroup.value.calendareventrole.map(newRole => newRole.email);
+  }
+
+  removeRole(i) {
+    this.getCalendarEventRole.removeAt(i);
+  }
+
+  saveCalendar(formValue: NgForm) {
+    console.log(formValue.value);
+  }
+
+  search = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus$;
+
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => (term === '' ? this.startTime
+        : this.startTime.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 8))
+    );
   }
 
 }

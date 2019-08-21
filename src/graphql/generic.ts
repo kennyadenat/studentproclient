@@ -26,4 +26,8 @@ export const allgeneric = gql`{
   roles{
     role
   }
+  roleoptions{
+    role
+    icon
+  }
 }`;
