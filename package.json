@@ -52,7 +52,7 @@
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "jquery": "^3.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.26",
     "ngx-chips": "^2.0.2",
     "ngx-mask": "^8.0.3",
